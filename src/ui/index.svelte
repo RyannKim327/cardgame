@@ -20,7 +20,7 @@
 			<span>@{username}</span>
 			<span class="ml-2 text-[0.75rem]">Score {score}</span>
 		</div>
-		<ul class="flex flex-col gap-2">
+		<div class="flex flex-col gap-2">
 			<Navigator
 				click={() => {
 					changer("main");
@@ -39,7 +39,7 @@
 				}}
 				isCurrent={layout == "leaderboard"}>Leaderboard</Navigator
 			>
-		</ul>
+		</div>
 	</div>
 	<div class="w-[calc(75%_-_0.5rem)] bg-gray-950 p-2">
 		{#if layout === "main"}
