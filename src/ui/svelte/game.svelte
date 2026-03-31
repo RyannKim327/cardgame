@@ -1,18 +1,23 @@
 <script lang="ts">
 	import { onMount, onDestroy } from "svelte";
 	import { canvasManager } from "@/lib/canvasStore";
-	import { Card } from "@/ui/ts/card.ts";
+	import { CreateCard } from "@/ui/ts/card.ts";
 
 	let x = 10;
 
-	const render = (
-		ctx: CanvasRenderingContext2D,
-		width: number,
-		height: number,
-	) => {
+	const render = (ctx: CanvasRenderingContext2D) => {
+		const height = window.innerHeight;
+		const width = window.innerWidth;
+
+		const right = width / 1.5;
+		const left = width / 5;
+
 		ctx.clearRect(0, 0, width, height);
-		Card(ctx, x, 100);
-		console.log(height);
+
+		for (let i = 0; i < 2; i++) {
+			const Card = CreateCard(i);
+			Card(ctx, Math.floor(left * (i + 1)), Math.floor(height / 3));
+		}
 	};
 
 	function move() {
@@ -29,5 +34,3 @@
 		window.removeEventListener("click", move);
 	});
 </script>
-
-<!-- <Card /> -->
