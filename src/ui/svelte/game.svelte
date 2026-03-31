@@ -6,18 +6,40 @@
 	let canvas: HTMLCanvasElement;
 	let x = 10;
 
+	const imgs = [
+		{
+			img: "naruto.jpg",
+			pts: 100,
+		},
+		{
+			img: "naruto.jpg",
+			pts: 999999,
+		},
+		{
+			img: "uzu.jpg",
+			pts: 123456789,
+		},
+		{
+			img: "uzu.jpg",
+			pts: 1,
+		},
+	];
+
 	const render = (ctx: CanvasRenderingContext2D) => {
 		const height = window.innerHeight;
 		const width = window.innerWidth;
 
-		const right = width / 1.5;
-		const left = width / 5;
+		const left = width / imgs.length;
 
 		ctx.clearRect(0, 0, width, height);
 
-		for (let i = 0; i < 2; i++) {
-			const Card = CreateCard(i);
-			Card(ctx, Math.floor(left * (i + 1)), Math.floor(height / 3));
+		for (let i = 0; i < imgs.length; i++) {
+			const Card = CreateCard(imgs[i]["img"], imgs[i]["pts"]);
+			Card(
+				ctx,
+				Math.floor(left * i + left / imgs.length),
+				Math.floor(height / 3),
+			);
 		}
 	};
 
@@ -42,6 +64,6 @@
 
 <style>
 	canvas {
-		background-color: black;
+		background-color: transparent;
 	}
 </style>

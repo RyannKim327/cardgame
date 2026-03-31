@@ -16,23 +16,34 @@ cardgame/
 ├── public/                # Static assets (icons, images)
 ├── src/
 │   ├── assets/            # Project-specific assets (logos)
+│   ├── components/        # Shared UI components
+│   │   └── navigator.svelte
 │   ├── lib/               # Core logic and state management
 │   │   ├── canvasManager.ts
 │   │   └── canvasStore.ts
-│   ├── ui/                # UI Components
-│   │   ├── svelte/        # Svelte components (game, button)
-│   │   └── ts/            # TypeScript UI logic (card)
+│   ├── ui/                # Layout and views
+│   │   ├── index.svelte   # Main layout handler
+│   │   ├── svelte/        # View components (game, user)
+│   │   └── ts/            # Canvas rendering logic (card, button)
 │   ├── app.css            # Global styles
-│   ├── app.svelte         # Main application component
+│   ├── app.svelte         # Root application component
 │   └── main.ts            # Entry point
 ├── index.html             # HTML template
-├── package.json           # Project metadata and dependencies
+├── LICENSE.md             # Project license
+├── package.json           # Project metadata
 ├── svelte.config.js       # Svelte configuration
 ├── tsconfig.json          # TypeScript configuration
 └── vite.config.ts         # Vite configuration
 ```
 
 ## Changelogs
+- **0.2.0** (2026-04-01)
+  - Integrated dynamic layout navigation system
+  - Separated Dashboard, Game, and Leaderboard views
+  - Added Canvas-based Button system for manual rendering
+  - Reorganized project structure under `src/ui`
+- **0.1.1** (2026-03-31)
+  - Added project documentation and LICENSE.md
 - **0.1.0** (2026-03-31)
   - Added Dynamic Card count
   - Implemented core Carding functionality
