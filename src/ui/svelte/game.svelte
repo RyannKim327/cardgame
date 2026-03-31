@@ -3,6 +3,7 @@
 	import { canvasManager } from "@/lib/canvasStore";
 	import { CreateCard } from "@/ui/ts/card.ts";
 
+	let canvas: HTMLCanvasElement;
 	let x = 10;
 
 	const render = (ctx: CanvasRenderingContext2D) => {
@@ -25,6 +26,7 @@
 	}
 
 	onMount(() => {
+		canvasManager.init(canvas);
 		canvasManager.start(render);
 		window.addEventListener("click", move);
 	});
@@ -34,3 +36,12 @@
 		window.removeEventListener("click", move);
 	});
 </script>
+
+<canvas width={window.innerWidth} height={window.innerHeight} bind:this={canvas}
+></canvas>
+
+<style>
+	canvas {
+		background-color: black;
+	}
+</style>
