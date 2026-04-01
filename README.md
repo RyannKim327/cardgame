@@ -36,6 +36,18 @@ cardgame/
 └── vite.config.ts         # Vite configuration
 ```
 
+## Code of Conduct
+All assets (images, icons, etc.) used in this project MUST be open source or properly licensed for use. Please ensure you have the right to include any media before submitting a pull request.
+
+## Contributing
+We welcome contributions! Even if you're new to coding, here's how you can help:
+1. **Fork the repo:** Create your own copy of the project on GitHub.
+2. **Clone it:** Download the project to your computer.
+3. **Create a branch:** Start a new branch for your changes (e.g., `git checkout -b feature-name`).
+4. **Make changes:** Add your features, fix bugs, or improve documentation.
+5. **Commit & Push:** Save your changes (`git commit -m 'Add some feature'`) and upload them to your fork (`git push origin feature-name`).
+6. **Pull Request:** Open a Pull Request on GitHub to share your changes with us.
+
 ## Changelogs
 - **0.2.0** (2026-04-01)
   - Integrated dynamic layout navigation system
