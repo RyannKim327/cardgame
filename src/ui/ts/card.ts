@@ -1,6 +1,6 @@
 export function CreateCard(image: string, points: number) {
 	const w = 150;
-	const h = 225;
+	const h = 255;
 
 	const img = new Image();
 

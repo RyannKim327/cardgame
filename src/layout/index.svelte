@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Navigator from "@/components/navigator.svelte";
-	import Game from "@/ui/svelte/game.svelte";
-	import Leaderboard from "@/ui/svelte/leaderboard.svelte";
-	import User from "@/ui/svelte/user.svelte";
+	import Game from "@/layout/svelte/game.svelte";
+	import Leaderboard from "@/layout/svelte/leaderboard.svelte";
+	import User from "@/layout/svelte/user.svelte";
 
 	let layout = "main";
 
