@@ -51,7 +51,11 @@ We welcome contributions! Even if you're new to coding, here's how you can help:
 2. **Clone it:** Download the project to your computer.
 3. **Create a branch:** Start a new branch for your changes (e.g., `git checkout -b feature-name`).
 4. **Make changes:** Add your features, fix bugs, or improve documentation.
-5. **Commit & Push:** Save your changes using our mandatory format: `MM-DD-YY HH:MM Summary` (e.g., `git commit -m "04-01-26 13:21 Update README"`). Then upload them to your fork (`git push origin feature-name`).
+5. **Commit & Push:** Save your changes using a descriptive commit message. We recommend following these formats:
+   - `feat: Added something`
+   - `fixed: Error on handler`
+   - `docs: Updated documentation`
+   Then upload them to your fork (`git push origin feature-name`).
 6. **Pull Request:** Open a Pull Request on GitHub to share your changes with us.
 
 ## Changelogs
