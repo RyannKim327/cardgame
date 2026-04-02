@@ -9,7 +9,7 @@
 	class={`flex flex-col card ${type ?? "common"} w-[150px] h-[245px] justify-between`}
 >
 	<div class="p-2 aspect-square">
-		<img src={img} alt={img} class="w-full h-full" />
+		<img src={`${type ?? "common"}/${img}`} alt={img} class="w-full h-full" />
 	</div>
 	<span
 		class="flex flex-col desc h-25 text-[0.5rem] font-bold overflow-hidden p-1"
@@ -44,5 +44,14 @@
 
 	.common {
 		border-color: red;
+	}
+	.uncommon {
+		border-color: blue;
+		> div > img {
+			border-color: blue;
+		}
+		> .desc {
+			background-color: skyblue;
+		}
 	}
 </style>

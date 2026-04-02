@@ -2,7 +2,9 @@
 
 ## Introduction
 
-A web-based card game project built with Svelte and TypeScript, focusing on dynamic card management and canvas-based rendering.
+A web-based card game project built with Svelte and TypeScript, focusing on dynamic card management and component-based rendering.
+
+This project was developed to enhance versatility across evolving tech stacks and to create a free, fun gaming experience without any in-game purchases or financial involvement.
 
 ## Tech Stack
 
@@ -18,16 +20,19 @@ A web-based card game project built with Svelte and TypeScript, focusing on dyna
 cardgame/
 ├── public/                # Static assets (icons, images)
 ├── src/
-│   ├── assets/            # Project-specific assets (logos)
+│   ├── assets/            # Project-specific assets and data
+│   │   └── data/
+│   │       └── types.json
 │   ├── components/        # Shared UI components
 │   │   └── navigator.svelte
-│   ├── lib/               # Core logic and state management
-│   │   ├── canvasManager.ts
-│   │   └── canvasStore.ts
-│   ├── ui/                # Layout and views
-│   │   ├── index.svelte   # Main layout handler
-│   │   ├── svelte/        # View components (game, user)
-│   │   └── ts/            # Canvas rendering logic (card, button)
+│   ├── control/           # Data control logic
+│   │   └── data.ts
+│   ├── layout/            # Page layouts and view containers
+│   │   ├── index.svelte
+│   │   └── svelte/        # View-specific layouts
+│   ├── lib/               # Utility logic and state
+│   ├── ui/                # UI components
+│   │   └── svelte/        # Svelte-based UI elements (card)
 │   ├── app.css            # Global styles
 │   ├── app.svelte         # Root application component
 │   └── main.ts            # Entry point
@@ -60,6 +65,12 @@ We welcome contributions! Even if you're new to coding, here's how you can help:
 
 ## Changelogs
 
+- **0.3.0** (2026-04-02)
+  - Transitioned from Canvas-based rendering to Svelte component-based rendering
+  - Removed Canvas management systems for improved DOM performance
+  - Refined project structure into `layout`, `control`, and `ui` directories
+- **0.2.1** (2026-04-02)
+  - Updated README with project's purpose and free-to-play nature
 - **0.2.0** (2026-04-01)
   - Integrated dynamic layout navigation system
   - Separated Dashboard, Game, and Leaderboard views
