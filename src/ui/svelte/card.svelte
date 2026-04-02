@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let pts: number;
 	export let img: string;
-	export let desc: string;
+	export let desc: string | undefined | null;
 	export let type: string;
 </script>
 
