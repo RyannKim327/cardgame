@@ -1,23 +1,22 @@
 <script>
 	import Card from "@/ui/svelte/card.svelte";
 
-	const imgs = ["naruto.jpg", "uzu.jpg"];
-
 	const list_of_card = [
 		{
-			img: imgs[0],
+			img: "common/naruto.png",
 			points: 100,
-			description: "bebetime",
 		},
 		{
-			img: imgs[1],
-			points: 100,
-			description: "HIHI",
+			img: "uncommon/kioken.jpg",
+			points: 999999,
 		},
 		{
-			img: imgs[0],
-			points: 10,
-			description: "Hello",
+			img: "common/n2.jpg",
+			points: 123456789,
+		},
+		{
+			img: "uzu.jpg",
+			points: 1,
 		},
 	];
 </script>
