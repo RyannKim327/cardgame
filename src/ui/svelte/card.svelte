@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let pts: number;
 	export let img: string;
-	export let desc: string;
+	export let desc: string | undefined | null;
 	export let type: string;
 </script>
 
@@ -9,9 +9,12 @@
 	class={`flex flex-col card ${type ?? "common"} w-[150px] h-[245px] justify-between`}
 >
 	<div class="p-2 aspect-square">
-		<img src={img} alt="Image" class="w-full h-full" />
+		<img src={`${type ?? "common"}/${img}`} alt={img} class="w-full h-full" />
 	</div>
-	<span class="desc h-[100px]">{desc}</span>
+	<span
+		class="flex flex-col desc h-25 text-[0.5rem] font-bold overflow-hidden p-1"
+		>{desc ?? "No Description"}</span
+	>
 	<span class="bg-black text-white px-2 py-1 italic text-[12px] font-serif"
 		>Points: {pts}</span
 	>
@@ -41,5 +44,14 @@
 
 	.common {
 		border-color: red;
+	}
+	.uncommon {
+		border-color: blue;
+		> div > img {
+			border-color: blue;
+		}
+		> .desc {
+			background-color: skyblue;
+		}
 	}
 </style>
