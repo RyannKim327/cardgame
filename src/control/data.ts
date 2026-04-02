@@ -3,12 +3,14 @@ export default function DataController() {
 		{
 			img: "naruto.png",
 			pts: 100,
-			type: "common"
+			type: "common",
+			desc: "Passive +0.001% added points in each battle if loss"
 		},
 		{
 			img: "kioken.jpg",
 			pts: 999999,
-			type: "uncommon"
+			type: "uncommon",
+			desc: "Passive: Can stun the card which make the player can play two times in a row"
 		},
 		{
 			img: "n2.jpg",
