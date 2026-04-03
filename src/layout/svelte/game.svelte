@@ -27,7 +27,7 @@
 		let player = -1;
 
 		if (t1 > t2) {
-			if (won > t1) {
+			if (won < t1) {
 				points = "t1";
 				player = 0;
 			} else {
@@ -35,7 +35,7 @@
 				player = 1;
 			}
 		} else if (t1 < t2) {
-			if (won > t2) {
+			if (won < t2) {
 				points = "t2";
 				player = 1;
 			} else {
@@ -43,7 +43,7 @@
 				player = 0;
 			}
 		} else {
-			if (won % 2 == 0) {
+			if (Math.floor(won) % 2 == 0) {
 				points = "t1";
 				player = 0;
 			} else {
