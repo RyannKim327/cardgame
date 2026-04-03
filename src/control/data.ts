@@ -1,4 +1,6 @@
 // INFO: Some data are not actually exists, it is just to test the card frame
+// If the image is not actually exists, no worries, I will going to add more photos
+// before the beta test
 
 const DataController = [
 	{
