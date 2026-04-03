@@ -8,7 +8,7 @@ const DataController = [
 	{
 		img: "kioken.jpg",
 		pts: 999999,
-		type: "legendary",
+		type: "collection",
 		desc: "Passive: Can stun the card which make the player can play two times in a row"
 	},
 	{

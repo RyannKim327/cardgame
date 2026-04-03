@@ -31,11 +31,6 @@
 			}
 		}
 
-		> span {
-			background-color: white;
-			color: black;
-		}
-
 		> .desc {
 			margin: 0.5rem;
 			background-color: red;
@@ -50,11 +45,8 @@
 	.common {
 		background-color: #2c2c2c;
 		color: #f0f0f0;
-		> .points {
-			background-color: #2c2c2c;
-			color: #f0f0f0;
-		}
 		border-color: #5a5a5a;
+
 		> div > img {
 			border-color: #8a8a8a;
 		}
@@ -68,11 +60,8 @@
 	.uncommon {
 		background-color: #1f3d2b;
 		color: #a7f3d0;
-		> .points {
-			background-color: #1f3d2b;
-			color: #a7f3d0;
-		}
 		border-color: #3faf6c;
+
 		> div > img {
 			border-color: #6be39b;
 		}
@@ -88,11 +77,6 @@
 		color: #93c5fd;
 		animation: rareGlow 2.5s ease-in-out infinite;
 		border-color: #3b82f6;
-
-		> .points {
-			background-color: #1c2f4a;
-			color: #93c5fd;
-		}
 
 		> div > img {
 			border-color: #60a5fa;
@@ -110,11 +94,6 @@
 		color: #d8b4fe;
 		border-color: #a855f7;
 		animation: epicGlow 2s ease-in-out infinite;
-
-		> .points {
-			background-color: #2d1f3d;
-			color: #d8b4fe;
-		}
 
 		> div > img {
 			border-color: #c084fc;
@@ -134,11 +113,6 @@
 		color: #fde68a;
 		border-color: #f59e0b;
 
-		> .points {
-			background-color: #3d2a1f;
-			color: #fde68a;
-		}
-
 		> div > img {
 			border-color: #fcd34d;
 		}
@@ -155,11 +129,6 @@
 		color: #fca5a5;
 		border-color: #ef4444;
 		animation: mythicPulse 1.8s ease-in-out infinite;
-
-		> .points {
-			background-color: #3a1a1a;
-			color: #fca5a5;
-		}
 
 		> div > img {
 			border-color: #f87171;
@@ -178,11 +147,6 @@
 		border-color: #14b8a6;
 		animation: exoticFlicker 2s infinite;
 
-		> .points {
-			background-color: #0f3d3e;
-			color: #5eead4;
-		}
-
 		> div > img {
 			border-color: #2dd4bf;
 		}
@@ -194,25 +158,26 @@
 		}
 	}
 
-	.unique {
-		background-color: #3a3315;
-		color: #fef08a;
-		border-color: #eab308;
-		animation: uniqueGlow 3s ease-in-out infinite;
+	.collection {
+		position: relative;
+		overflow: hidden;
+		z-index: 0;
+		background-color: #2f2a1a;
+		color: #fef3c7;
+		border-color: #2f2a1a;
+		position: relative;
+		overflow: hidden;
 
-		> .points {
-			background-color: #3a3315;
-			color: #fef08a;
-		}
+		animation: collectionGlow 3s ease-in-out infinite;
 
 		> div > img {
-			border-color: #fde047;
+			border-color: #f6e27a;
 		}
 
-		.desc {
-			background-color: #27220f;
-			color: #fff9db;
-			border-color: #a16207;
+		> .desc {
+			background-color: #1f1a10;
+			color: #fff8dc;
+			border-color: #a68b2c;
 		}
 	}
 
@@ -221,11 +186,6 @@
 		color: #c7d2fe;
 		border-color: #818cf8;
 		animation: artifactAura 2.5s ease-in-out infinite;
-
-		> .points {
-			background-color: #1a233a;
-			color: #c7d2fe;
-		}
 
 		> div > img {
 			border-color: #a5b4fc;
@@ -256,6 +216,41 @@
 		);
 		animation: legendaryShine 3s ease-in-out infinite;
 		pointer-events: none;
+	}
+
+	.collection::before {
+		content: "";
+		position: absolute;
+		top: -25%;
+		left: -65%;
+		border-radius: 8px;
+		pointer-events: none;
+		background: conic-gradient(
+			#a68b2c 0%,
+			#f6e27a 30%,
+			#f6e27a 50%,
+			#d4af37 70%,
+			#a68b2c 100%
+		);
+		width: calc(100% + 200px);
+		height: calc(100% + 100px);
+		animation: rotateBorder 3s linear infinite;
+		z-index: -1;
+	}
+
+	.collection::after {
+		content: "";
+		position: absolute;
+		inset: 2px;
+		background: #2f2a1a;
+		background-image: repeating-linear-gradient(
+			45deg,
+			rgba(255, 255, 255, 0.03),
+			rgba(255, 255, 255, 0.03) 2px,
+			transparent 2px,
+			transparent 6px
+		);
+		z-index: -1;
 	}
 
 	/* Animations */
@@ -317,13 +312,22 @@
 		}
 	}
 
-	@keyframes uniqueGlow {
+	@keyframes collectionGlow {
 		0%,
 		100% {
-			box-shadow: 0 0 8px #eab308;
+			box-shadow: 0 0 8px #d4af37;
 		}
 		50% {
-			box-shadow: 0 0 22px #fde047;
+			box-shadow: 0 0 18px #f6e27a;
+		}
+	}
+
+	@keyframes rotateBorder {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
 		}
 	}
 
