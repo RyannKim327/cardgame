@@ -112,8 +112,18 @@
 	.legendary {
 		position: relative;
 		overflow: hidden;
-		background-color: #3d2a1f;
-		color: #fde68a;
+
+		background-image: linear-gradient(
+			120deg,
+			#3d2a13 0%,
+			#d97706 25%,
+			#eab308 50%,
+			/* darker gold center */ #d97706 75%,
+			#3d2a13 100%
+		);
+
+		color: #2a1c12;
+		text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
 		border-color: #f59e0b;
 
 		> div > img {
@@ -128,8 +138,17 @@
 	}
 
 	.mythic {
-		background-color: #3a1a1a;
-		color: #fca5a5;
+		background-image: linear-gradient(
+			120deg,
+			#3a1a1a 0%,
+			#dc2626 25%,
+			#ef4444 50%,
+			/* less bright */ #dc2626 75%,
+			#3a1a1a 100%
+		);
+
+		color: #ffe4e4;
+		text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 		border-color: #ef4444;
 		animation: mythicPulse 1.8s ease-in-out infinite;
 
@@ -145,8 +164,17 @@
 	}
 
 	.exotic {
-		background-color: #0f3d3e;
-		color: #5eead4;
+		background-image: linear-gradient(
+			120deg,
+			#0f3d3e 0%,
+			#0d9488 25%,
+			#14b8a6 50%,
+			/* toned down center */ #0d9488 75%,
+			#0f3d3e 100%
+		);
+
+		color: #ccfbf1;
+		text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 		border-color: #14b8a6;
 		animation: exoticFlicker 2s infinite;
 
@@ -165,12 +193,19 @@
 		position: relative;
 		overflow: hidden;
 		z-index: 0;
-		background-color: #2f2a1a;
-		color: #fef3c7;
-		border-color: #2f2a1a;
-		position: relative;
-		overflow: hidden;
 
+		background-image: linear-gradient(
+			120deg,
+			#2f2a1a 0%,
+			#b8962e 30%,
+			#d4af37 50%,
+			/* refined gold center */ #b8962e 70%,
+			#2f2a1a 100%
+		);
+
+		color: #fef3c7;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+		border-color: #2f2a1a;
 		animation: collectionGlow 3s ease-in-out infinite;
 
 		> div > img {
@@ -185,8 +220,17 @@
 	}
 
 	.artifact {
-		background-color: #1a233a;
-		color: #c7d2fe;
+		background-image: linear-gradient(
+			120deg,
+			#1a233a 0%,
+			#4f46e5 25%,
+			#6366f1 50%,
+			/* darker arcane center */ #4f46e5 75%,
+			#1a233a 100%
+		);
+
+		color: #e0e7ff;
+		text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 		border-color: #818cf8;
 		animation: artifactAura 2.5s ease-in-out infinite;
 
@@ -199,9 +243,7 @@
 			color: #e0e7ff;
 			border-color: #4f46e5;
 		}
-	}
-
-	/* After and before */
+	} /* After and before */
 
 	.legendary::before {
 		content: "";
