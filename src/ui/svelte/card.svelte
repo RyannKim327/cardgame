@@ -212,10 +212,10 @@
 		height: 200%;
 		transform: rotate(25deg);
 		background: linear-gradient(
-			120deg,
-			transparent 30%,
-			rgba(255, 255, 255, 0.5),
-			transparent 70%
+			90deg,
+			transparent 10%,
+			rgba(255, 255, 255, 0.3),
+			transparent 90%
 		);
 		animation: legendaryShine 3s ease-in-out infinite;
 		pointer-events: none;
@@ -281,10 +281,10 @@
 
 	@keyframes legendaryShine {
 		0% {
-			left: -100%;
+			left: -110%;
 		}
 		100% {
-			left: 150%;
+			left: calc(100% + 150px);
 		}
 	}
 
