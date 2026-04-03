@@ -6,6 +6,8 @@ A web-based card game project built with Svelte and TypeScript, focusing on dyna
 
 This project was developed to enhance versatility across evolving tech stacks and to create a free, fun gaming experience without any in-game purchases or financial involvement.
 
+[![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/3e70bcc5-fba2-41e2-9f7e-ad10cff55336.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/3e70bcc5-fba2-41e2-9f7e-ad10cff55336)
+
 ## Tech Stack
 
 - **Framework:** [Svelte 5](https://svelte.dev/)
