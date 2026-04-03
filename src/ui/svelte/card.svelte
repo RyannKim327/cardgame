@@ -3,11 +3,13 @@
 	export let img: string;
 	export let desc: string | undefined | null;
 	export let type: string;
+
+	if (!type) {
+		type = "common";
+	}
 </script>
 
-<div
-	class={`flex flex-col card ${type ?? "common"} w-[150px] h-[245px] justify-between`}
->
+<div class={`flex flex-col card ${type} w-[150px] h-[245px] justify-between`}>
 	<div class="p-2 aspect-square">
 		<img src={`${type ?? "common"}/${img}`} alt={img} class="w-full h-full" />
 	</div>
@@ -39,6 +41,7 @@
 		}
 	}
 	.card:hover {
+		animation-play-state: paused;
 		transform: scale(1.03);
 	}
 
