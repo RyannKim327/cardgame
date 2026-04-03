@@ -1,4 +1,4 @@
-{
+const types = {
 	"points": {
 		"common": 0,
 		"uncommon": 10,
@@ -11,3 +11,5 @@
 		"collection": 0
 	}
 }
+
+export default types

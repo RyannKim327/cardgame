@@ -5,8 +5,8 @@
 
 <div class="w-full h-full">
 	<span>Card Collection</span>
-	<div class="flex flex-row flex-wrap gap-2 p-2">
-		{#each DataController() as c}
+	<div class="flex flex-row flex-wrap gap-8 p-2">
+		{#each DataController as c}
 			<Card img={c.img} pts={c.pts} type={c.type} desc={c.desc} />
 		{/each}
 	</div>
