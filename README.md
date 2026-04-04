@@ -20,21 +20,25 @@ This project was developed to enhance versatility across evolving tech stacks an
 
 ```text
 cardgame/
-├── public/                # Static assets (icons, images)
+├── public/                # Static assets (icons, images, card assets by rarity)
+│   ├── artifact/          # Rarity-specific card images
+│   ├── collection/        # Collection-specific card images
+│   ├── common/            # Common rarity assets
+│   ├── ...                # Other rarity folders (epic, exotic, legendary, etc.)
+│   ├── favicon.svg
+│   └── icons.svg
 ├── src/
-│   ├── assets/            # Project-specific assets and data
-│   │   └── data/
-│   │       └── types.json
+│   ├── assets/            # Project logos and general images (hero.png, svelte.svg)
 │   ├── components/        # Shared UI components
 │   │   └── navigator.svelte
-│   ├── control/           # Data control logic
-│   │   └── data.ts
+│   ├── control/           # Data control logic and types
+│   │   ├── data.ts
+│   │   └── types.ts
 │   ├── layout/            # Page layouts and view containers
 │   │   ├── index.svelte
-│   │   └── svelte/        # View-specific layouts
-│   ├── lib/               # Utility logic and state
+│   │   └── svelte/        # View-specific layouts (game.svelte, user.svelte, etc.)
 │   ├── ui/                # UI components
-│   │   └── svelte/        # Svelte-based UI elements (card)
+│   │   └── svelte/        # Svelte-based UI elements (card.svelte)
 │   ├── app.css            # Global styles
 │   ├── app.svelte         # Root application component
 │   └── main.ts            # Entry point
@@ -67,6 +71,13 @@ We welcome contributions! Even if you're new to coding, here's how you can help:
 
 ## Changelogs
 
+- **0.4.0** (2026-04-04)
+  - Implemented card `fight` function and improved card frame design
+  - Added rarity-based colorization and collection categories for cards
+  - Fixed weighted winner selection and broken tie-break logic
+  - Integrated Svelte 5 `onclick` event handlers and polished legendary animations
+  - Initialized asset folder structure for icons and collections
+  - Enhanced card data types and added detailed descriptions
 - **0.3.0** (2026-04-02)
   - Transitioned from Canvas-based rendering to Svelte component-based rendering
   - Removed Canvas management systems for improved DOM performance
