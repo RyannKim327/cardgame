@@ -65,5 +65,5 @@
 		<Card img={p1.img} pts={p1.pts} desc={p1.desc} type={p1.type} />
 		<Card img={p2.img} pts={p2.pts} desc={p2.desc} type={p2.type} />
 	</div>
-	<button on:click={fight} class="p-2">Fight</button>
+	<button onclick={fight} class="p-2">Fight</button>
 </div>
