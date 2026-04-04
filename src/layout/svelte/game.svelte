@@ -11,7 +11,7 @@
 
 	// TODO: Players
 	const p1 = data[3];
-	const p2 = data[2];
+	const p2 = data[1];
 
 	// TODO: Points
 	const t1 = (pts[p1.type] + 1) * p1.pts;
@@ -57,13 +57,13 @@
 
 <div class="w-full h-full">
 	<div class="flex flex-col">
-		<span>Card Battle</span>
-		<span>Card 1 chance: {percent1}</span>
-		<span>Card 2 chance: {percent2}</span>
+		<span>Card Battle {points}</span>
+		<span>Card 1 winning chance: {percent1}%</span>
+		<span>Card 2 winning chance: {percent2}%</span>
 	</div>
 	<div class="flex flex-row flex-wrap justify-evenly items-center gap-2 p-2">
 		<Card img={p1.img} pts={p1.pts} desc={p1.desc} type={p1.type} />
 		<Card img={p2.img} pts={p2.pts} desc={p2.desc} type={p2.type} />
 	</div>
-	<button on:click={fight} class="p-2">Fight</button>
+	<button onclick={fight} class="p-2">Fight</button>
 </div>
