@@ -4,51 +4,51 @@
 
 const DataController = [
 	{
-		img: "naruto.png",
+		img: "a.jpg",
 		pts: 100,
 		type: "common",
 		desc: "Passive +0.001% added points in each battle if loss"
 	},
 	{
-		img: "kioken.jpg",
+		img: "a.jpg",
 		pts: 999999,
 		type: "legendary",
 		desc: "Passive: Can stun the card which make the player can play two times in a row"
 	},
 	{
-		img: "n2.jpg",
+		img: "a.jpg",
 		pts: 123456789,
 		type: "rare"
 	},
 	{
-		img: "uzu.jpg",
+		img: "a.jpg",
 		pts: 50000000,
 		type: "collection"
 	},
 	{
-		img: "naruto.png",
+		img: "a.jpg",
 		pts: 100,
 		type: "exotic",
 		desc: "Passive +0.001% added points in each battle if loss"
 	},
 	{
-		img: "kioken.jpg",
+		img: "a.jpg",
 		pts: 999999,
 		type: "epic",
 		desc: "Passive: Can stun the card which make the player can play two times in a row"
 	},
 	{
-		img: "n2.jpg",
+		img: "a.jpg",
 		pts: 123456789,
 		type: "mythic"
 	},
 	{
-		img: "uzu.jpg",
+		img: "a.jpg",
 		pts: 50000000,
 		type: "uncommon"
 	},
 	{
-		img: "uzu.jpg",
+		img: "a.jpg",
 		pts: 50000000,
 		type: "artifact"
 	},
