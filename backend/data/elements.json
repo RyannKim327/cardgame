@@ -1,0 +1,1615 @@
+[
+	{
+		"id": "H",
+		"name": "Hydrogen",
+		"type": "nonmetal",
+		"rarity": "abundant",
+		"reactivity": 8,
+		"stability": 3,
+		"hp": 4,
+		"traits": [
+			"nonmetal",
+			"fuel",
+			"reducer"
+		]
+	},
+	{
+		"id": "He",
+		"name": "Helium",
+		"type": "noble_gas",
+		"rarity": "scarce",
+		"reactivity": 0,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"inert",
+			"noble_gas",
+			"stable"
+		]
+	},
+	{
+		"id": "Li",
+		"name": "Lithium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 9,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"reducer",
+			"alkali_metal"
+		]
+	},
+	{
+		"id": "Be",
+		"name": "Beryllium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"stable_binder"
+		]
+	},
+	{
+		"id": "B",
+		"name": "Boron",
+		"type": "metalloid",
+		"rarity": "moderate",
+		"reactivity": 5,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"metalloid",
+			"covalent_former"
+		]
+	},
+	{
+		"id": "C",
+		"name": "Carbon",
+		"type": "nonmetal",
+		"rarity": "abundant",
+		"reactivity": 6,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"nonmetal",
+			"fuel",
+			"covalent_former"
+		]
+	},
+	{
+		"id": "N",
+		"name": "Nitrogen",
+		"type": "nonmetal",
+		"rarity": "abundant",
+		"reactivity": 3,
+		"stability": 9,
+		"hp": 8,
+		"traits": [
+			"nonmetal",
+			"stable_gas",
+			"inert_like"
+		]
+	},
+	{
+		"id": "O",
+		"name": "Oxygen",
+		"type": "nonmetal",
+		"rarity": "abundant",
+		"reactivity": 9,
+		"stability": 4,
+		"hp": 5,
+		"traits": [
+			"oxidizer",
+			"nonmetal",
+			"high_electronegativity"
+		]
+	},
+	{
+		"id": "F",
+		"name": "Fluorine",
+		"type": "nonmetal",
+		"rarity": "scarce",
+		"reactivity": 10,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"oxidizer",
+			"highly_reactive"
+		]
+	},
+	{
+		"id": "Ne",
+		"name": "Neon",
+		"type": "noble_gas",
+		"rarity": "trace",
+		"reactivity": 0,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"inert",
+			"noble_gas"
+		]
+	},
+	{
+		"id": "Na",
+		"name": "Sodium",
+		"type": "metal",
+		"rarity": "common",
+		"reactivity": 10,
+		"stability": 2,
+		"hp": 5,
+		"traits": [
+			"metal",
+			"reducer",
+			"alkali_metal"
+		]
+	},
+	{
+		"id": "Mg",
+		"name": "Magnesium",
+		"type": "metal",
+		"rarity": "common",
+		"reactivity": 7,
+		"stability": 5,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"reducer"
+		]
+	},
+	{
+		"id": "Al",
+		"name": "Aluminum",
+		"type": "metal",
+		"rarity": "common",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"stable_binder"
+		]
+	},
+	{
+		"id": "Si",
+		"name": "Silicon",
+		"type": "metalloid",
+		"rarity": "abundant",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metalloid",
+			"covalent_former"
+		]
+	},
+	{
+		"id": "P",
+		"name": "Phosphorus",
+		"type": "nonmetal",
+		"rarity": "moderate",
+		"reactivity": 8,
+		"stability": 4,
+		"hp": 5,
+		"traits": [
+			"nonmetal",
+			"fuel"
+		]
+	},
+	{
+		"id": "S",
+		"name": "Sulfur",
+		"type": "nonmetal",
+		"rarity": "moderate",
+		"reactivity": 7,
+		"stability": 5,
+		"hp": 6,
+		"traits": [
+			"nonmetal",
+			"fuel"
+		]
+	},
+	{
+		"id": "Cl",
+		"name": "Chlorine",
+		"type": "nonmetal",
+		"rarity": "scarce",
+		"reactivity": 9,
+		"stability": 3,
+		"hp": 5,
+		"traits": [
+			"oxidizer",
+			"halogen"
+		]
+	},
+	{
+		"id": "Ar",
+		"name": "Argon",
+		"type": "noble_gas",
+		"rarity": "trace",
+		"reactivity": 0,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"inert",
+			"noble_gas"
+		]
+	},
+	{
+		"id": "K",
+		"name": "Potassium",
+		"type": "metal",
+		"rarity": "common",
+		"reactivity": 10,
+		"stability": 2,
+		"hp": 5,
+		"traits": [
+			"metal",
+			"reducer",
+			"alkali_metal"
+		]
+	},
+	{
+		"id": "Ca",
+		"name": "Calcium",
+		"type": "metal",
+		"rarity": "common",
+		"reactivity": 8,
+		"stability": 4,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"reducer"
+		]
+	},
+	{
+		"id": "Sc",
+		"name": "Scandium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"stable_binder"
+		]
+	},
+	{
+		"id": "Ti",
+		"name": "Titanium",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"strong_bond"
+		]
+	},
+	{
+		"id": "V",
+		"name": "Vanadium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Cr",
+		"name": "Chromium",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"stable_binder"
+		]
+	},
+	{
+		"id": "Mn",
+		"name": "Manganese",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 6,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Fe",
+		"name": "Iron",
+		"type": "metal",
+		"rarity": "common",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"structural"
+		]
+	},
+	{
+		"id": "Co",
+		"name": "Cobalt",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Ni",
+		"name": "Nickel",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"stable_binder"
+		]
+	},
+	{
+		"id": "Cu",
+		"name": "Copper",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"conductive"
+		]
+	},
+	{
+		"id": "Zn",
+		"name": "Zinc",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Ga",
+		"name": "Gallium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"post_transition"
+		]
+	},
+	{
+		"id": "Ge",
+		"name": "Germanium",
+		"type": "metalloid",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metalloid",
+			"semiconductor"
+		]
+	},
+	{
+		"id": "As",
+		"name": "Arsenic",
+		"type": "metalloid",
+		"rarity": "scarce",
+		"reactivity": 7,
+		"stability": 3,
+		"hp": 5,
+		"traits": [
+			"metalloid",
+			"toxic",
+			"oxidizer_like"
+		]
+	},
+	{
+		"id": "Se",
+		"name": "Selenium",
+		"type": "nonmetal",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 5,
+		"hp": 6,
+		"traits": [
+			"nonmetal",
+			"oxidizer_like"
+		]
+	},
+	{
+		"id": "Br",
+		"name": "Bromine",
+		"type": "nonmetal",
+		"rarity": "scarce",
+		"reactivity": 8,
+		"stability": 3,
+		"hp": 5,
+		"traits": [
+			"halogen",
+			"oxidizer"
+		]
+	},
+	{
+		"id": "Kr",
+		"name": "Krypton",
+		"type": "noble_gas",
+		"rarity": "trace",
+		"reactivity": 0,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"inert",
+			"noble_gas"
+		]
+	},
+	{
+		"id": "Rb",
+		"name": "Rubidium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 10,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"reducer",
+			"alkali_metal"
+		]
+	},
+	{
+		"id": "Sr",
+		"name": "Strontium",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 8,
+		"stability": 4,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"reducer"
+		]
+	},
+	{
+		"id": "Y",
+		"name": "Yttrium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Zr",
+		"name": "Zirconium",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"strong_bond",
+			"corrosion_resistant"
+		]
+	},
+	{
+		"id": "Nb",
+		"name": "Niobium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"strong_bond"
+		]
+	},
+	{
+		"id": "Mo",
+		"name": "Molybdenum",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Tc",
+		"name": "Technetium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 6,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"radioactive",
+			"unstable"
+		]
+	},
+	{
+		"id": "Ru",
+		"name": "Ruthenium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"catalyst"
+		]
+	},
+	{
+		"id": "Rh",
+		"name": "Rhodium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 3,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"catalyst",
+			"noble_like"
+		]
+	},
+	{
+		"id": "Pd",
+		"name": "Palladium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 4,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"catalyst",
+			"bond_builder"
+		]
+	},
+	{
+		"id": "Ag",
+		"name": "Silver",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 3,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"conductive",
+			"stable_bond"
+		]
+	},
+	{
+		"id": "Cd",
+		"name": "Cadmium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 5,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"toxic"
+		]
+	},
+	{
+		"id": "In",
+		"name": "Indium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"post_transition",
+			"soft_metal"
+		]
+	},
+	{
+		"id": "Sn",
+		"name": "Tin",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"alloy_former",
+			"stable_bond"
+		]
+	},
+	{
+		"id": "Sb",
+		"name": "Antimony",
+		"type": "metalloid",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"metalloid",
+			"brittle",
+			"semiconductor_like"
+		]
+	},
+	{
+		"id": "Te",
+		"name": "Tellurium",
+		"type": "metalloid",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"metalloid",
+			"semiconductor_like"
+		]
+	},
+	{
+		"id": "I",
+		"name": "Iodine",
+		"type": "nonmetal",
+		"rarity": "very_scarce",
+		"reactivity": 7,
+		"stability": 4,
+		"hp": 5,
+		"traits": [
+			"halogen",
+			"oxidizer"
+		]
+	},
+	{
+		"id": "Xe",
+		"name": "Xenon",
+		"type": "noble_gas",
+		"rarity": "trace",
+		"reactivity": 0,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"inert",
+			"noble_gas"
+		]
+	},
+	{
+		"id": "Cs",
+		"name": "Cesium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 10,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"alkali_metal",
+			"explosive_reducer"
+		]
+	},
+	{
+		"id": "Ba",
+		"name": "Barium",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 8,
+		"stability": 4,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"reactive_earth_metal"
+		]
+	},
+	{
+		"id": "La",
+		"name": "Lanthanum",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Ce",
+		"name": "Cerium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"catalyst"
+		]
+	},
+	{
+		"id": "Pr",
+		"name": "Praseodymium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Nd",
+		"name": "Neodymium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"magnetic"
+		]
+	},
+	{
+		"id": "Nb",
+		"name": "Niobium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"strong_bond"
+		]
+	},
+	{
+		"id": "Mo",
+		"name": "Molybdenum",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal"
+		]
+	},
+	{
+		"id": "Tc",
+		"name": "Technetium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 6,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"radioactive",
+			"unstable"
+		]
+	},
+	{
+		"id": "Ru",
+		"name": "Ruthenium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"catalyst"
+		]
+	},
+	{
+		"id": "Rh",
+		"name": "Rhodium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 3,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"catalyst",
+			"noble_like"
+		]
+	},
+	{
+		"id": "Pd",
+		"name": "Palladium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 4,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"catalyst",
+			"bond_builder"
+		]
+	},
+	{
+		"id": "Ag",
+		"name": "Silver",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 3,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"conductive",
+			"stable_bond"
+		]
+	},
+	{
+		"id": "Cd",
+		"name": "Cadmium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 5,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"toxic"
+		]
+	},
+	{
+		"id": "In",
+		"name": "Indium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"post_transition",
+			"soft_metal"
+		]
+	},
+	{
+		"id": "Sn",
+		"name": "Tin",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"alloy_former",
+			"stable_bond"
+		]
+	},
+	{
+		"id": "Sb",
+		"name": "Antimony",
+		"type": "metalloid",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"metalloid",
+			"brittle",
+			"semiconductor_like"
+		]
+	},
+	{
+		"id": "Te",
+		"name": "Tellurium",
+		"type": "metalloid",
+		"rarity": "scarce",
+		"reactivity": 6,
+		"stability": 6,
+		"hp": 6,
+		"traits": [
+			"metalloid",
+			"semiconductor_like"
+		]
+	},
+	{
+		"id": "I",
+		"name": "Iodine",
+		"type": "nonmetal",
+		"rarity": "very_scarce",
+		"reactivity": 7,
+		"stability": 4,
+		"hp": 5,
+		"traits": [
+			"halogen",
+			"oxidizer"
+		]
+	},
+	{
+		"id": "Xe",
+		"name": "Xenon",
+		"type": "noble_gas",
+		"rarity": "trace",
+		"reactivity": 0,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"inert",
+			"noble_gas"
+		]
+	},
+	{
+		"id": "Cs",
+		"name": "Cesium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 10,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"alkali_metal",
+			"explosive_reducer"
+		]
+	},
+	{
+		"id": "Ba",
+		"name": "Barium",
+		"type": "metal",
+		"rarity": "moderate",
+		"reactivity": 8,
+		"stability": 4,
+		"hp": 6,
+		"traits": [
+			"metal",
+			"reactive_earth_metal"
+		]
+	},
+	{
+		"id": "La",
+		"name": "Lanthanum",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Ce",
+		"name": "Cerium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"catalyst"
+		]
+	},
+	{
+		"id": "Pr",
+		"name": "Praseodymium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Nd",
+		"name": "Neodymium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"magnetic"
+		]
+	},
+	{
+		"id": "Pm",
+		"name": "Promethium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 6,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"radioactive",
+			"unstable"
+		]
+	},
+	{
+		"id": "Sm",
+		"name": "Samarium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"magnetic"
+		]
+	},
+	{
+		"id": "Eu",
+		"name": "Europium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"luminescent"
+		]
+	},
+	{
+		"id": "Gd",
+		"name": "Gadolinium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"magnetic"
+		]
+	},
+	{
+		"id": "Tb",
+		"name": "Terbium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"phosphorescent"
+		]
+	},
+	{
+		"id": "Dy",
+		"name": "Dysprosium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"magnetic"
+		]
+	},
+	{
+		"id": "Ho",
+		"name": "Holmium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Er",
+		"name": "Erbium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"optical"
+		]
+	},
+	{
+		"id": "Tm",
+		"name": "Thulium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Yb",
+		"name": "Ytterbium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 7,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"lanthanide"
+		]
+	},
+	{
+		"id": "Lu",
+		"name": "Lutetium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 5,
+		"stability": 8,
+		"hp": 8,
+		"traits": [
+			"metal",
+			"lanthanide",
+			"transition_bridge"
+		]
+	},
+	{
+		"id": "Hf",
+		"name": "Hafnium",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"strong_bond"
+		]
+	},
+	{
+		"id": "Ta",
+		"name": "Tantalum",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 3,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"corrosion_resistant"
+		]
+	},
+	{
+		"id": "W",
+		"name": "Tungsten",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 3,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"extreme_durability"
+		]
+	},
+	{
+		"id": "Re",
+		"name": "Rhenium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 4,
+		"stability": 9,
+		"hp": 9,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"catalyst"
+		]
+	},
+	{
+		"id": "Os",
+		"name": "Osmium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 3,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"dense"
+		]
+	},
+	{
+		"id": "Ir",
+		"name": "Iridium",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 2,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"noble_like"
+		]
+	},
+	{
+		"id": "Pt",
+		"name": "Platinum",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 3,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"catalyst",
+			"noble_like"
+		]
+	},
+	{
+		"id": "Au",
+		"name": "Gold",
+		"type": "metal",
+		"rarity": "very_scarce",
+		"reactivity": 2,
+		"stability": 10,
+		"hp": 10,
+		"traits": [
+			"metal",
+			"noble_metal",
+			"conductive",
+			"stable"
+		]
+	},
+	{
+		"id": "Hg",
+		"name": "Mercury",
+		"type": "metal",
+		"rarity": "scarce",
+		"reactivity": 4,
+		"stability": 6,
+		"hp": 7,
+		"traits": [
+			"metal",
+			"liquid",
+			"toxic"
+		]
+	},
+	{
+		"id": "Md",
+		"name": "Mendelevium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"actinide",
+			"radioactive"
+		]
+	},
+	{
+		"id": "No",
+		"name": "Nobelium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"actinide",
+			"radioactive"
+		]
+	},
+	{
+		"id": "Lr",
+		"name": "Lawrencium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"actinide",
+			"radioactive"
+		]
+	},
+	{
+		"id": "Rf",
+		"name": "Rutherfordium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Db",
+		"name": "Dubnium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Sg",
+		"name": "Seaborgium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Bh",
+		"name": "Bohrium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Hs",
+		"name": "Hassium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Mt",
+		"name": "Meitnerium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Ds",
+		"name": "Darmstadtium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Rg",
+		"name": "Roentgenium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 9,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"transition_metal",
+			"unstable"
+		]
+	},
+	{
+		"id": "Cn",
+		"name": "Copernicium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 6,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"volatile",
+			"liquid_like"
+		]
+	},
+	{
+		"id": "Nh",
+		"name": "Nihonium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"post_transition",
+			"unstable"
+		]
+	},
+	{
+		"id": "Fl",
+		"name": "Flerovium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 7,
+		"stability": 2,
+		"hp": 4,
+		"traits": [
+			"metal",
+			"volatile",
+			"unstable"
+		]
+	},
+	{
+		"id": "Mc",
+		"name": "Moscovium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 8,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"post_transition",
+			"unstable"
+		]
+	},
+	{
+		"id": "Lv",
+		"name": "Livermorium",
+		"type": "metal",
+		"rarity": "synthetic",
+		"reactivity": 7,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"metal",
+			"volatile",
+			"unstable"
+		]
+	},
+	{
+		"id": "Ts",
+		"name": "Tennessine",
+		"type": "nonmetal",
+		"rarity": "synthetic",
+		"reactivity": 7,
+		"stability": 1,
+		"hp": 3,
+		"traits": [
+			"halogen",
+			"super_oxidizer",
+			"unstable"
+		]
+	},
+	{
+		"id": "Og",
+		"name": "Oganesson",
+		"type": "noble_gas",
+		"rarity": "synthetic",
+		"reactivity": 3,
+		"stability": 1,
+		"hp": 2,
+		"traits": [
+			"noble_gas",
+			"quantum_instability",
+			"inert_breaking"
+		]
+	}
+]
