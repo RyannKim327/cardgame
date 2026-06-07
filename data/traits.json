@@ -1,0 +1,53 @@
+{
+	"oxidizer": {
+		"strong_against": [
+			"reducer",
+			"fuel"
+		],
+		"weak_against": [
+			"inert"
+		]
+	},
+	"reducer": {
+		"strong_against": [
+			"oxidizer"
+		],
+		"weak_against": [
+			"strong_oxidizer"
+		]
+	},
+	"fuel": {
+		"strong_against": [
+			"oxidizer"
+		],
+		"weak_against": [
+			"inert"
+		]
+	},
+	"inert": {
+		"strong_against": [],
+		"weak_against": [
+			"highly_reactive"
+		]
+	},
+	"metal": {
+		"strong_against": [
+			"nonmetal"
+		],
+		"weak_against": [
+			"oxidizer"
+		]
+	},
+	"halogen": {
+		"strong_against": [
+			"metals"
+		],
+		"weak_against": [
+			"inert"
+		]
+	},
+	"catalyst": {
+		"strong_against": [],
+		"weak_against": []
+	}
+}
