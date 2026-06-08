@@ -35,6 +35,8 @@ async function init() {
         resize()
         animate()
     } else {
+        // TODO: Automated reload with cooldown of 2.5 seconds
+        // This is to prevent the heavy load of accessing the backend
         setTimeout(() => {
             init()
         }, 2500)
@@ -148,6 +150,8 @@ function drawLobbyCards() {
                 element,
                 time: state.time
             })
+        } else {
+            console.error(`ERR [Draw BG]: Out of bounce`)
         }
     })
 }
