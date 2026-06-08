@@ -13,13 +13,18 @@ export default function api(url = "http://localhost:3000", headers = {}) {
 			const searchParams = new URLSearchParams(params)
 			fullUrl += `?${searchParams.toString()}`
 		}
+		try {
+			const response = await fetch(fullUrl, {
+				method: "GET",
+				headers: headers
+			}).then(r => r.json())
 
-		const response = await fetch(fullUrl, {
-			method: "GET",
-			headers: headers
-		}).then(r => r.json())
-
-		return response
+			return response
+		} catch (e) {
+			return {
+				error: e
+			}
+		}
 	}
 
 	async function post(endpoint, data, params) {
@@ -32,17 +37,22 @@ export default function api(url = "http://localhost:3000", headers = {}) {
 			const searchParams = new URLSearchParams(params)
 			fullUrl += `?${searchParams.toString()}`
 		}
+		try {
+			const response = await fetch(fullUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					...headers
+				},
+				body: JSON.stringify(data)
+			}).then(r => r.json())
 
-		const response = await fetch(fullUrl, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				...headers
-			},
-			body: JSON.stringify(data)
-		}).then(r => r.json())
-
-		return response
+			return response
+		} catch (e) {
+			return {
+				error: e
+			}
+		}
 	}
 
 	return {

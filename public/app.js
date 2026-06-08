@@ -16,9 +16,11 @@ let time = 0
 async function init() {
 	const client = api()
 	const response = await client.get("/elements")
-	elements = response
-	resize()
-	animate()
+	if (!response.error) {
+		elements = response
+		resize()
+		animate()
+	}
 }
 
 function resize() {
