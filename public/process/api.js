@@ -1,10 +1,6 @@
-export async function api(url, headers) {
-	if (!url) {
-		url = "http://localhost:3000"
-	}
-
+export default function api(url = "http://localhost:3000", headers = {}) {
 	if (url.endsWith("/")) {
-		url = url.subString(0, url, length - 1)
+		url = url.slice(0, -1)
 	}
 
 	async function get(endpoint, params) {
@@ -12,13 +8,23 @@ export async function api(url, headers) {
 			endpoint = `/${endpoint}`
 		}
 
-		const response = await fetch(endpoint, {
-			method: "GET",
-			params: params,
-			headers: headers
-		}).then(r => r.json())
+		let fullUrl = `${url}${endpoint}`
+		if (params) {
+			const searchParams = new URLSearchParams(params)
+			fullUrl += `?${searchParams.toString()}`
+		}
+		try {
+			const response = await fetch(fullUrl, {
+				method: "GET",
+				headers: headers
+			}).then(r => r.json())
 
-		return response
+			return response
+		} catch (e) {
+			return {
+				error: e
+			}
+		}
 	}
 
 	async function post(endpoint, data, params) {
@@ -26,15 +32,29 @@ export async function api(url, headers) {
 			endpoint = `/${endpoint}`
 		}
 
-		const response = await fetch(endpoint, {
-			method: "POST",
-			params: params,
-			headers: headers,
-			body: JSON.stringify(data)
-		}).then(r => r.json())
+		let fullUrl = `${url}${endpoint}`
+		if (params) {
+			const searchParams = new URLSearchParams(params)
+			fullUrl += `?${searchParams.toString()}`
+		}
+		try {
+			const response = await fetch(fullUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					...headers
+				},
+				body: JSON.stringify(data)
+			}).then(r => r.json())
 
-		return response
+			return response
+		} catch (e) {
+			return {
+				error: e
+			}
+		}
 	}
+
 	return {
 		get, post
 	}
