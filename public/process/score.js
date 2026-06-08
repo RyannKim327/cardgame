@@ -9,13 +9,13 @@
  */
 
 function damageExtras(partial, attacker, defender, traitsData) {
-	// Passive damage based on reactivity: "divide it into 5" or "more or less 2" for 8
+	// TODO: Passive damage based on reactivity: "divide it into 5" or "more or less 2" for 8
 	const passiveDamage = Math.round(attacker.reactivity / 5)
 
-	// True damage: "8 as true damage like literally -8 in HP"
+	// TODO: True damage: "8 as true damage like literally -8 in HP"
 	const trueDamage = attacker.reactivity
 
-	// Trait-based multiplier logic
+	// TODO: Trait-based multiplier logic
 	let traitMultiplier = 1.0
 	if (traitsData && attacker.traits && defender.traits) {
 		attacker.traits.forEach(aTrait => {
@@ -36,10 +36,12 @@ function damageExtras(partial, attacker, defender, traitsData) {
 		})
 	}
 
+	// INFO:
 	// Status effects: "paralize in human due to its passive"
 	// High reactivity (8+) can cause paralysis
 	const status = attacker.reactivity >= 8 ? "paralyzed" : null
 
+	// INFO:
 	// Total calculation: (base + passive) * multiplier + true damage
 	// True damage is added at the end as it bypasses standard defenses/multipliers.
 	const totalCalculated = Math.floor((partial + passiveDamage) * traitMultiplier) + trueDamage
@@ -66,7 +68,6 @@ export function damagePoints(data) {
 	const partialDamage = totalHp * 0.3
 	const randomDamage = Math.floor(Math.random() * partialDamage)
 
-	// Apply extras
 	const extras = damageExtras(randomDamage, attacker, defender, traits)
 
 	return {

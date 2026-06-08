@@ -12,7 +12,7 @@ export default function card(ctx, info) {
 	const { x, y, w, h, element, time } = info
 	const rarity = rarityConfig[element.rarity] || rarityConfig.abundant
 
-	// Draw Glow for animated cards
+	// TODO: Draw Glow for animated cards
 	if (rarity.animated) {
 		const glowSize = 10 + Math.sin(time * 5) * 5
 		ctx.shadowBlur = glowSize
@@ -21,7 +21,7 @@ export default function card(ctx, info) {
 		ctx.shadowBlur = 0
 	}
 
-	// Card Background
+	// INFO: Card Background
 	const gradient = ctx.createLinearGradient(x, y, x + w, y + h)
 	gradient.addColorStop(0, rarity.color)
 	gradient.addColorStop(1, rarity.secondary)
@@ -34,7 +34,7 @@ export default function card(ctx, info) {
 	// Reset shadow for text and other elements
 	ctx.shadowBlur = 0
 
-	// Animated border for high rarity
+	// TODO: Animated border for high rarity
 	if (rarity.animated) {
 		ctx.strokeStyle = "white"
 		ctx.lineWidth = 2 + Math.sin(time * 3)
@@ -46,7 +46,7 @@ export default function card(ctx, info) {
 		ctx.setLineDash([])
 	}
 
-	// Shimmer effect for legendary rarities
+	// TODO: Shimmer effect for legendary rarities
 	if (["very_scarce", "trace", "synthetic"].includes(element.rarity)) {
 		ctx.globalCompositeOperation = "lighter"
 
@@ -72,13 +72,13 @@ export default function card(ctx, info) {
 
 		ctx.globalCompositeOperation = "source-over"
 
-		// Decorative Legendary Border Design
+		// INFO: Decorative Legendary Border Design
 		ctx.strokeStyle = "rgba(255, 255, 255, 0.7)"
 		ctx.lineWidth = 2
 		const cornerSize = w * 0.15
 		const offset = 4
 
-		// Draw ornamental corner brackets
+		// INFO: Draw ornamental corner brackets
 		const corners = [
 			{ sx: x - offset, sy: y - offset, dx: 1, dy: 1 },
 			{ sx: x + w + offset, sy: y - offset, dx: -1, dy: 1 },
@@ -93,7 +93,7 @@ export default function card(ctx, info) {
 			ctx.lineTo(c.sx + (cornerSize * c.dx), c.sy)
 			ctx.stroke()
 
-			// Small jewel at each corner
+			// INFO: Small jewel at each corner
 			ctx.fillStyle = rarity.color
 			ctx.beginPath()
 			ctx.arc(c.sx, c.sy, rarity.radius, 0, Math.PI * 2)
@@ -103,7 +103,7 @@ export default function card(ctx, info) {
 			ctx.stroke()
 		})
 
-		// Subtle pulse for legendary cards
+		// INFO: Subtle pulse for legendary cards
 		const pulse = Math.sin(time * 4) * 0.1 + 0.9
 		ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * pulse})`
 		ctx.lineWidth = 1
@@ -112,20 +112,20 @@ export default function card(ctx, info) {
 		ctx.stroke()
 	}
 
-	// Symbol Square (Element ID box)
+	// INFO: Symbol Square (Element ID box)
 	const sqMargin = w * 0.1
 	const sqW = w - (sqMargin * 2)
 	const sqH = h * 0.3
 	const sqX = x + sqMargin
 	const sqY = y + h * 0.22
 
-	// Draw the square with a solid "any color" (Dark slate for professional look)
+	// TODO: Draw the square with a solid "any color" (Dark slate for professional look)
 	ctx.fillStyle = "rgba(10, 10, 10, 0.5)"
 	ctx.beginPath()
 	ctx.roundRect(sqX, sqY, sqW, sqH, 5)
 	ctx.fill()
 
-	// Highlight border onto the square (with a subtle glow)
+	// TODO: Highlight border onto the square (with a subtle glow)
 	ctx.save()
 	ctx.shadowBlur = 5
 	ctx.shadowColor = "rgba(10, 10, 10, 0.6)"
@@ -134,25 +134,25 @@ export default function card(ctx, info) {
 	ctx.stroke()
 	ctx.restore()
 
-	// Text shadow for all text elements
+	// TODO: Text shadow for all text elements
 	ctx.save()
 	ctx.shadowBlur = 4
 	ctx.shadowColor = "rgba(0, 0, 0, 0.8)"
 	ctx.shadowOffsetX = 1
 	ctx.shadowOffsetY = 1
 
-	// Symbol
+	// TODO: Symbol
 	ctx.fillStyle = rarity.text
 	ctx.font = `bold ${w * 0.3}px sans-serif`
 	ctx.textAlign = "center"
 	ctx.fillText(element.id, x + w / 2, sqY + sqH * 0.75)
 
-	// Name
+	// TODO: Name
 	ctx.font = `bold ${w * 0.1}px sans-serif`
 	ctx.fillStyle = rarity.text
 	ctx.fillText(element.name, x + w / 2, sqY + sqH + h * 0.25)
 
-	// HP
+	// TODO: HP
 	ctx.font = `bold ${w * 0.1}px sans-serif`
 	ctx.textAlign = "right"
 	ctx.fillStyle = rarity.text

@@ -6,7 +6,6 @@ export function initProfile(cardCount) {
         hideProfile();
     });
 
-    // Close on overlay click
     modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) {
             hideProfile();
