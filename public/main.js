@@ -35,7 +35,9 @@ async function init() {
         resize()
         animate()
     } else {
-        init()
+        setTimeout(() => {
+            init()
+        }, 2500)
     }
 }
 
