@@ -9,8 +9,8 @@ const canvas = document.getElementById("app")
 const ctx = canvas.getContext("2d")
 
 if (!ctx) {
-	alert("Could not get 2D context")
-	throw new Error("Could now get 2D Context")
+    alert("Could not get 2D context")
+    throw new Error("Could now get 2D Context")
 }
 
 // Application State
@@ -22,19 +22,21 @@ let state = {
 }
 
 async function init() {
-	const client = api()
-	const response = await client.get("/elements")
-	if (!response.error) {
-		state.elements = response
-		
+    const client = api()
+    const response = await client.get("/elements")
+    if (!response.error) {
+        state.elements = response
+
         // Initialize UI Modules
         initAuth(handleLogin);
         initLobby(handleLogout, handleShowProfile);
         initProfile();
 
         resize()
-		animate()
-	}
+        animate()
+    } else {
+        init()
+    }
 }
 
 function handleLogin(user) {
@@ -58,24 +60,24 @@ function handleShowProfile() {
 }
 
 function resize() {
-	utils.resizeCanvas(canvas, window)
+    utils.resizeCanvas(canvas, window)
 }
 
 function animate() {
-	state.time += 0.01
-	draw()
-	requestAnimationFrame(animate)
+    state.time += 0.01
+    draw()
+    requestAnimationFrame(animate)
 }
 
 function draw() {
-	// Clear Background
+    // Clear Background
     ctx.fillStyle = "#050a14" // Deep dark navy
-	ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     // Draw grid background for sci-fi feel
     drawGrid();
 
-	if (state.elements.length > 0) {
+    if (state.elements.length > 0) {
         // Different rendering based on view
         if (state.view === 'auth') {
             // Background effect: just a few cards floating
@@ -84,21 +86,21 @@ function draw() {
             // Lobby: Show the actual "deck" or lobby view
             drawLobbyCards();
         }
-	}
+    }
 }
 
 function drawGrid() {
     ctx.strokeStyle = "rgba(0, 242, 255, 0.05)";
     ctx.lineWidth = 1;
     const step = 50;
-    
+
     for (let x = 0; x < canvas.width; x += step) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
         ctx.stroke();
     }
-    
+
     for (let y = 0; y < canvas.height; y += step) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -116,7 +118,7 @@ function drawBackgroundCards() {
         const h = w * 1.5;
         const x = 100 + i * 200 + Math.sin(state.time + i) * 20;
         const y = 200 + Math.cos(state.time * 0.5 + i) * 30;
-        
+
         card(ctx, { w, h, x, y, element, time: state.time });
     });
 }
