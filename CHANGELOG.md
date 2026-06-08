@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 - **Backend Setup:** Established a robust Express server to serve static files and JSON data.
 - **Canvas Engine:** Initialized a new rendering system using Canvas for improved flexibility and performance.
 - **Simplified Structure:** Reorganized the project for better maintainability and clarity.
+- **Card Mechanics:** Implemented damage calculation logic for gameplay.
+- **Card Rarity:** Introduced a rarity system with visual distinctions in card rendering.
+- **API Improvements:** Refined data fetching and state management for smoother card interactions.
+- **UI Polishing:** Enhanced card visual presentation with updated text colors and styles.
 
 ## 0.5.0 (2026-06-04)
 - **Periodic Table Integration:** Added comprehensive data for chemical elements.
