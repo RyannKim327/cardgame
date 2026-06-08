@@ -6,6 +6,7 @@
 		<title>Card Game</title>
 		<meta name="description" content="A card game related to Elements in Periodic Table">
 		<meta name="title" content="Card Game">
+		<link rel="stylesheet" href="style.css">
 		<style>
 			body {
 				height: 100dvh;
@@ -25,6 +26,68 @@
 	</head>
 	<body>
 		<canvas id="app"></canvas>
+		<div id="ui-root">
+			<!-- Views will be injected or toggled here -->
+			<div id="auth-view" class="view">
+				<div class="panel auth-panel">
+					<h1 class="glitch" data-text="ELEMENTS">ELEMENTS</h1>
+					
+					<div id="login-form" class="form-container">
+						<h2>ACCESS TERMINAL</h2>
+						<input type="text" id="login-username" placeholder="USERNAME" autocomplete="off">
+						<input type="password" id="login-password" placeholder="PASSWORD">
+						<button id="btn-login" class="btn-primary">INITIATE SESSION</button>
+						<p class="form-footer">NO ACCOUNT? <a href="#" id="link-show-register">REGISTER SIGNAL</a></p>
+					</div>
+
+					<div id="register-form" class="form-container hidden">
+						<h2>CREATE IDENTITY</h2>
+						<input type="text" id="reg-username" placeholder="USERNAME" autocomplete="off">
+						<input type="email" id="reg-email" placeholder="EMAIL (OPTIONAL)" autocomplete="off">
+						<input type="password" id="reg-password" placeholder="PASSWORD">
+						<input type="password" id="reg-confirm" placeholder="CONFIRM PASSWORD">
+						<button id="btn-register" class="btn-primary">REGISTER IDENTITY</button>
+						<p class="form-footer">ALREADY REGISTERED? <a href="#" id="link-show-login">RETURN TO LOGIN</a></p>
+					</div>
+				</div>
+			</div>
+
+			<div id="lobby-view" class="view hidden">
+				<div class="hud-top">
+					<div class="user-info">
+						<span class="label">OPERATOR:</span>
+						<span id="display-username" class="value">GUEST</span>
+					</div>
+					<div class="hud-actions">
+						<button id="btn-profile" class="btn-hud">PROFILE</button>
+						<button id="btn-logout" class="btn-hud">LOGOUT</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="modal-overlay" class="hidden">
+				<div id="profile-modal" class="panel modal-panel">
+					<div class="modal-header">
+						<h2>IDENTITY DATA</h2>
+						<button id="btn-close-modal" class="btn-close">&times;</button>
+					</div>
+					<div class="modal-content">
+						<div class="profile-row">
+							<span class="label">ID:</span>
+							<span id="profile-id" class="value">---</span>
+						</div>
+						<div class="profile-row">
+							<span class="label">CARDS COLLECTED:</span>
+							<span id="profile-card-count" class="value">0</span>
+						</div>
+						<div class="profile-row">
+							<span class="label">RANK:</span>
+							<span class="value">NOVICE</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
-	<script type="module" src="app.js"></script>
+	<script type="module" src="main.js"></script>
 </html>
