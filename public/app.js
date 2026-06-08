@@ -1,5 +1,6 @@
 import * as utils from "./utils.js"
 import card from "./widgets/card.js"
+import api from "./process/api.js"
 
 const canvas = document.getElementById("app")
 const ctx = canvas.getContext("2d")
@@ -13,8 +14,9 @@ let elements = []
 let time = 0
 
 async function init() {
-	const response = await fetch("/elements")
-	elements = await response.json()
+	const client = api()
+	const response = await client.get("/elements")
+	elements = response
 	resize()
 	animate()
 }
@@ -34,15 +36,21 @@ function draw() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 	if (elements.length > 0) {
-		// Draw a few sample cards to show different rarities
-		const sampleIndices = [0, 1, 4, 10, 42, 60, 117, 10, 110] // H (abundant), He (scarce), B (moderate), Na (common), Rh (very_scarce), Pm (synthetic), Og (synthetic)
+		const sampleIndices = [0, 1, 4, 10, 42, 60, 117, 10, 9, 36]
 		sampleIndices.forEach((idx, i) => {
 			const element = elements[idx]
+			const grids = canvas.width > 1000 ? 8 : 4
+			const w = canvas.width / (grids * 1.3)
+			const xgaps = 30
+			const ygaps = 30
+			const h = (w * 1.5)
+
 			if (element) {
 				card(ctx, {
-					w: 120,
-					x: 50 + (i % 4) * 150,
-					y: 50 + Math.floor(i / 4) * 200,
+					w: w,
+					h: h,
+					x: 50 + (i % grids) * (w + xgaps),
+					y: 50 + Math.floor(i / grids) * (h + ygaps),
 					element,
 					time
 				})
