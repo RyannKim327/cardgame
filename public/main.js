@@ -116,12 +116,16 @@ function drawBackgroundCards() {
     const driftIndices = [0, 10, 42];
     driftIndices.forEach((idx, i) => {
         const element = state.elements[idx];
-        const w = 150;
-        const h = w * 1.5;
-        const x = 100 + i * 200 + Math.sin(state.time + i) * 20;
-        const y = 200 + Math.cos(state.time * 0.5 + i) * 30;
+        if (element) {
+            const w = 150;
+            const h = w * 1.5;
+            const x = 100 + i * 200 + Math.sin(state.time + i) * 20;
+            const y = 200 + Math.cos(state.time * 0.5 + i) * 30;
 
-        card(ctx, { w, h, x, y, element, time: state.time });
+            card(ctx, { w, h, x, y, element, time: state.time });
+        } else {
+            console.error(`ERR [Draw BG]: Out of bounce`)
+        }
     });
 }
 
