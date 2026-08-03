@@ -6,6 +6,7 @@
 		<title>Card Game</title>
 		<meta name="description" content="A card game related to Elements in Periodic Table">
 		<meta name="title" content="Card Game">
+		<link rel="stylesheet" href="style.css">
 		<style>
 			body {
 				height: 100dvh;
@@ -25,6 +26,148 @@
 	</head>
 	<body>
 		<canvas id="app"></canvas>
+		<div id="ui-root">
+			<!-- Views will be injected or toggled here -->
+			<div id="auth-view" class="view">
+				<div class="panel auth-panel">
+					<h1 class="glitch" data-text="ELEMENTS">ELEMENTS</h1>
+					
+					<div id="login-form" class="form-container">
+						<h2>ACCESS TERMINAL</h2>
+						<input type="text" id="login-username" placeholder="USERNAME" autocomplete="off">
+						<input type="password" id="login-password" placeholder="PASSWORD">
+						<button id="btn-login" class="btn-primary">INITIATE SESSION</button>
+						<p class="form-footer">NO ACCOUNT? <a href="#" id="link-show-register">REGISTER SIGNAL</a></p>
+					</div>
+
+					<div id="register-form" class="form-container hidden">
+						<h2>CREATE IDENTITY</h2>
+						<input type="text" id="reg-username" placeholder="USERNAME" autocomplete="off">
+						<input type="email" id="reg-email" placeholder="EMAIL (OPTIONAL)" autocomplete="off">
+						<input type="password" id="reg-password" placeholder="PASSWORD">
+						<input type="password" id="reg-confirm" placeholder="CONFIRM PASSWORD">
+						<button id="btn-register" class="btn-primary">REGISTER IDENTITY</button>
+						<p class="form-footer">ALREADY REGISTERED? <a href="#" id="link-show-login">RETURN TO LOGIN</a></p>
+					</div>
+				</div>
+			</div>
+
+			<div id="lobby-view" class="view hidden">
+				<div class="hud-top">
+					<div class="user-info">
+						<span class="label">OPERATOR:</span>
+						<span id="display-username" class="value">GUEST</span>
+					</div>
+					<div class="hud-actions">
+						<button id="btn-battle" class="btn-hud">Battle</button>
+						<button id="btn-profile" class="btn-hud">PROFILE</button>
+						<button id="btn-logout" class="btn-hud">LOGOUT</button>
+					</div>
+				</div>
+
+				<div class="lobby-scroll-controls">
+					<button id="btn-scroll-up" class="btn-scroll-hud" title="Scroll Up">▲ UP</button>
+					<button id="btn-scroll-down" class="btn-scroll-hud" title="Scroll Down">▼ DOWN</button>
+				</div>
+			</div>
+
+			<div id="deck-select-view" class="view hidden">
+				<div class="panel deck-select-panel">
+					<h2 class="glitch" data-text="DECK SELECTION">DECK SELECTION</h2>
+					<p class="deck-subtitle">Select 3 element cards to bring into battle</p>
+
+					<div id="deck-select-grid" class="deck-select-grid"></div>
+
+					<div class="deck-select-footer">
+						<div class="selection-status">
+							SELECTED: <span id="select-count-text" class="value">0/3</span>
+						</div>
+						<div class="deck-btn-group">
+							<button id="btn-auto-select" class="btn-hud">AUTO SELECT</button>
+							<button id="btn-start-battle" class="btn-primary" disabled>INITIATE BATTLE</button>
+							<button id="btn-cancel-deck" class="btn-hud">CANCEL</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="battle-view" class="view hidden">
+				<div class="battle-hud-top">
+					<div class="opponent-info">
+						<span class="label">OPPONENT:</span>
+						<span class="value">BOT AI</span>
+					</div>
+					<div class="turn-badge-container">
+						<span id="turn-badge" class="turn-badge">YOUR TURN</span>
+					</div>
+					<div class="battle-actions-top">
+						<button id="btn-retreat" class="btn-hud">RETREAT</button>
+					</div>
+				</div>
+
+				<div class="battle-log-box">
+					<div id="battle-log-msg">Preparing elemental battle arena...</div>
+				</div>
+
+				<!-- Bench Switch Tray Modal -->
+				<div id="switch-modal-overlay" class="switch-overlay hidden">
+					<div class="panel switch-panel">
+						<h3>TACTICAL CARD SWITCH</h3>
+						<div id="switch-cards-container" class="switch-grid"></div>
+						<button id="btn-close-switch" class="btn-hud mt-2">CANCEL</button>
+					</div>
+				</div>
+
+				<div class="battle-hud-bottom">
+					<div class="battle-action-bar">
+						<button id="btn-attack" class="btn-action btn-attack">
+							<span class="action-icon">⚔️</span> ATTACK
+						</button>
+						<button id="btn-skill" class="btn-action btn-skill">
+							<span class="action-icon">⚡</span> TRAIT SKILL
+						</button>
+						<button id="btn-switch" class="btn-action btn-switch">
+							<span class="action-icon">🔄</span> SWITCH CARD
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="modal-overlay" class="hidden">
+				<div id="profile-modal" class="panel modal-panel">
+					<div class="modal-header">
+						<h2>IDENTITY DATA</h2>
+						<button id="btn-close-modal" class="btn-close">&times;</button>
+					</div>
+					<div class="modal-content">
+						<div class="profile-row">
+							<span class="label">ID:</span>
+							<span id="profile-id" class="value">---</span>
+						</div>
+						<div class="profile-row">
+							<span class="label">CARDS COLLECTED:</span>
+							<span id="profile-card-count" class="value">0</span>
+						</div>
+						<div class="profile-row">
+							<span class="label">RANK:</span>
+							<span class="value">NOVICE</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Battle Result Modal -->
+			<div id="battle-result-overlay" class="hidden">
+				<div class="panel result-panel">
+					<h1 id="result-title" class="glitch">VICTORY</h1>
+					<p id="result-message">All enemy elements eliminated!</p>
+					<div class="result-actions">
+						<button id="btn-battle-again" class="btn-primary">BATTLE AGAIN</button>
+						<button id="btn-battle-exit" class="btn-hud">RETURN TO LOBBY</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
-	<script type="module" src="app.js"></script>
+	<script type="module" src="main.js"></script>
 </html>
