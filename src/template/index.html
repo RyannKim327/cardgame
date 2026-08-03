@@ -59,9 +59,9 @@
 						<span id="display-username" class="value">GUEST</span>
 					</div>
 					<div class="hud-actions">
-						<button id="btn-battle" class="btn-hud">Battle</button>
-						<button id="btn-profile" class="btn-hud">PROFILE</button>
-						<button id="btn-logout" class="btn-hud">LOGOUT</button>
+						<button id="btn-battle" class="btn-hud"> ⚔️ vs ⚔️</button>
+						<button id="btn-profile" class="btn-hud"> 👤 </button>
+						<button id="btn-logout" class="btn-hud"> ➜] </button>
 					</div>
 				</div>
 
@@ -84,6 +84,7 @@
 						</div>
 						<div class="deck-btn-group">
 							<button id="btn-auto-select" class="btn-hud">AUTO SELECT</button>
+							<button id="btn-autopilot-deck" class="btn-hud btn-autopilot-deck">🤖 AUTO PILOT BATTLE</button>
 							<button id="btn-start-battle" class="btn-primary" disabled>INITIATE BATTLE</button>
 							<button id="btn-cancel-deck" class="btn-hud">CANCEL</button>
 						</div>
@@ -99,6 +100,7 @@
 					</div>
 					<div class="turn-badge-container">
 						<span id="turn-badge" class="turn-badge">YOUR TURN</span>
+						<span id="autopilot-badge" class="autopilot-badge hidden">🤖 AUTOPILOT ACTIVE</span>
 					</div>
 					<div class="battle-actions-top">
 						<button id="btn-retreat" class="btn-hud">RETREAT</button>
@@ -128,6 +130,9 @@
 						</button>
 						<button id="btn-switch" class="btn-action btn-switch">
 							<span class="action-icon">🔄</span> SWITCH CARD
+						</button>
+						<button id="btn-autopilot" class="btn-action btn-autopilot">
+							<span class="action-icon">🤖</span> AUTO PILOT: OFF
 						</button>
 					</div>
 				</div>

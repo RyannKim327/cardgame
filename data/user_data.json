@@ -1,38 +1,108 @@
 [
-	{
-		"id": "USR-001",
-		"username": "test",
-		"password": "test123",
-		"cards": [
-			{ "id": "H", "level": 3 },
-			{ "id": "He", "level": 1 },
-			{ "id": "Li", "level": 4 },
-			{ "id": "Be", "level": 2 },
-			{ "id": "B", "level": 1 },
-			{ "id": "C", "level": 5 },
-			{ "id": "N", "level": 2 },
-			{ "id": "O", "level": 4 },
-			{ "id": "F", "level": 1 },
-			{ "id": "Ne", "level": 5 },
-			{ "id": "Na", "level": 3 },
-			{ "id": "Mg", "level": 2 },
-			{ "id": "Fe", "level": 5 },
-			{ "id": "Cu", "level": 4 },
-			{ "id": "Ag", "level": 3 },
-			{ "id": "Au", "level": 5 },
-			{ "id": "Zn", "level": 2 },
-			{ "id": "Al", "level": 3 }
-		]
-	},
-	{
-		"id": "USR-002",
-		"username": "operator",
-		"password": "password123",
-		"cards": [
-			{ "id": "H", "level": 1 },
-			{ "id": "C", "level": 2 },
-			{ "id": "O", "level": 3 },
-			{ "id": "Fe", "level": 4 }
-		]
-	}
+  {
+    "id": "USR-001",
+    "username": "test",
+    "password": "test123",
+    "cards": [
+      {
+        "id": "H",
+        "level": 5
+      },
+      {
+        "id": "He",
+        "level": 1
+      },
+      {
+        "id": "Li",
+        "level": 4
+      },
+      {
+        "id": "Be",
+        "level": 2
+      },
+      {
+        "id": "B",
+        "level": 1
+      },
+      {
+        "id": "C",
+        "level": 5
+      },
+      {
+        "id": "N",
+        "level": 2
+      },
+      {
+        "id": "O",
+        "level": 4
+      },
+      {
+        "id": "F",
+        "level": 1
+      },
+      {
+        "id": "Ne",
+        "level": 5
+      },
+      {
+        "id": "Na",
+        "level": 3
+      },
+      {
+        "id": "Mg",
+        "level": 2
+      },
+      {
+        "id": "Fe",
+        "level": 5
+      },
+      {
+        "id": "Cu",
+        "level": 4
+      },
+      {
+        "id": "Ag",
+        "level": 3
+      },
+      {
+        "id": "Au",
+        "level": 5
+      },
+      {
+        "id": "Zn",
+        "level": 2
+      },
+      {
+        "id": "Al",
+        "level": 3
+      },
+      {
+        "id": "Sg",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "id": "USR-002",
+    "username": "operator",
+    "password": "password123",
+    "cards": [
+      {
+        "id": "H",
+        "level": 1
+      },
+      {
+        "id": "C",
+        "level": 2
+      },
+      {
+        "id": "O",
+        "level": 3
+      },
+      {
+        "id": "Fe",
+        "level": 4
+      }
+    ]
+  }
 ]

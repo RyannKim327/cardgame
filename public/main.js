@@ -65,7 +65,8 @@ function handleLogout() {
 
 function handleShowProfile() {
   if (state.currentUser) {
-    showProfile(state.currentUser, state.elements.length);
+    const cardCount = Array.isArray(state.currentUser.cards) ? state.currentUser.cards.length : 0;
+    showProfile(state.currentUser, cardCount);
   }
 }
 

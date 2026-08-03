@@ -1,25 +1,14 @@
+import { attackComputation } from "../utils.js";
+
 /**
- * Calculates damage points for card interactions based on:
- * 1. Base Attack = raw element.reactivity
- * 2. Max Damage = attack + (level * 5)
- * 3. Random Damage between min (1) and maxDamage
- * 4. Trait multiplier (Weak Against lessens damage by 35%)
- * 5. Automatic 3rd Attack Critical Skill Burst (1.75x multiplier)
+ * Calculates damage points for card interactions using attackComputation from utils.js.
  * 
- * @param {object} data - Object containing attacker, defender, traits, attackerLevel, attackCount.
+ * @param {object} data - Object containing attacker, defender, traits, attackerLevel.
  */
 export function damagePoints(data) {
-	const { attacker, defender, traits, attackerLevel = 1, attackCount = 1 } = data;
+	const { attacker, defender, traits, attackerLevel = 1 } = data;
 
-	// Base attack power directly from raw element.reactivity
-	const attackPower = Number(attacker.reactivity) || 1;
-	const maxDamage = attackPower + (attackerLevel * 5);
-	const minDamage = 1;
-
-	// Random damage between min (1) and maxDamage
-	const rawDamage = Math.floor(Math.random() * (maxDamage - minDamage + 1)) + minDamage;
-
-	// Trait relations: weak_against lessens damage, strong_against boosts damage
+	// Trait relations: weak_against lessens damage by 35% (0.65), strong_against boosts by 35% (1.35)
 	let traitMultiplier = 1.0;
 	let isWeak = false;
 	let isStrong = false;
@@ -44,19 +33,24 @@ export function damagePoints(data) {
 		});
 	}
 
-	// Automatic 3rd Attack Critical Burst
-	const is3rdAttack = (attackCount > 0 && attackCount % 3 === 0);
-	const critMultiplier = is3rdAttack ? 1.75 : 1.0;
-
-	const finalDamage = Math.max(1, Math.floor(rawDamage * traitMultiplier * critMultiplier));
+	// Pass level, attack (reactivity), reactivity, hp, and traitMultiplier into attackComputation
+	const attackResult = attackComputation(
+		attackerLevel,
+		attacker.reactivity,
+		attacker.reactivity,
+		attacker.hp,
+		traitMultiplier
+	);
 
 	return {
-		rawDamage: rawDamage,
-		maxDamage: maxDamage,
-		finalDamage: finalDamage,
+		rawDamage: attackResult.rawDamage,
+		maxDamage: attackResult.maxDamage,
+		reactivity: attackResult.reactivity,
+		hp: attackResult.hp,
+		finalDamage: attackResult.finalDamage,
 		isWeak: isWeak,
 		isStrong: isStrong,
-		is3rdAttack: is3rdAttack,
-		multiplier: traitMultiplier * critMultiplier
+		is3rdAttack: attackResult.isCrit,
+		multiplier: traitMultiplier * attackResult.critMultiplier
 	};
 }

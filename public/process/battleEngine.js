@@ -1,3 +1,4 @@
+import { hpComputation } from "../utils.js";
 import card from "../widgets/card.js";
 import { damagePoints } from "./score.js";
 
@@ -13,7 +14,11 @@ export class BattleEngine {
     this.turn = "player"; // "player" | "bot"
     this.isBusy = false;
     this.battleState = "idle"; // "idle" | "active" | "selecting_replacement" | "victory" | "defeat"
-    
+
+    // Auto Pilot State
+    this.isAutoPilot = false;
+    this.autoPilotTimer = null;
+
     // Visual Effects
     this.floatingTexts = [];
     this.projectiles = [];
@@ -28,7 +33,7 @@ export class BattleEngine {
   init(playerSelectedElements, traits, allElements = []) {
     this.elements = allElements.length > 0 ? allElements : (this.elements.length > 0 ? this.elements : playerSelectedElements || []);
     this.traits = traits || {};
-    
+
     // Use player selected cards if provided, otherwise pick 3 random
     let pCards = (playerSelectedElements && playerSelectedElements.length === 3) ? playerSelectedElements : [];
     if (pCards.length === 0 && this.elements.length > 0) {
@@ -45,7 +50,7 @@ export class BattleEngine {
     this.playerDeck = pCards.map((el, idx) => {
       const level = el.level || (idx + 1);
       const originalHp = Number(el.hp) || 4;
-      const maxHp = originalHp + (level * 5);
+      const maxHp = hpComputation(level, originalHp);
 
       return {
         instanceId: `player_${idx}`,
@@ -66,7 +71,7 @@ export class BattleEngine {
     this.botDeck = bCards.map((el, idx) => {
       const level = Math.floor(Math.random() * 10) + 1;
       const originalHp = Number(el.hp) || 4;
-      const maxHp = originalHp + (level * 5);
+      const maxHp = hpComputation(level, originalHp);
       const botElement = { ...el, level: level };
 
       return {
@@ -98,6 +103,11 @@ export class BattleEngine {
     this.addLog(`Player active: ${this.getPlayerActive().element.name} (Lv.${this.getPlayerActive().level})`);
     this.addLog(`Bot active: ${this.getBotActive().element.name} (Lv.${this.getBotActive().level})`);
 
+    if (this.isAutoPilot) {
+      this.addLog("🤖 AUTOPILOT: Active and preparing initial turn...");
+      this.scheduleAutoPilotAction(1000);
+    }
+
     if (this.onStateChange) this.onStateChange();
   }
 
@@ -115,35 +125,147 @@ export class BattleEngine {
     if (this.onLog) this.onLog(msg);
   }
 
+  // --- AUTOPILOT ENGINE ---
+
+  toggleAutoPilot(enabled = null) {
+    this.isAutoPilot = enabled !== null ? enabled : !this.isAutoPilot;
+    if (this.isAutoPilot) {
+      this.addLog("🤖 AUTOPILOT: ENGAGED - Tactical AI active!");
+      if (this.turn === "player" || this.battleState === "selecting_replacement") {
+        this.scheduleAutoPilotAction(600);
+      }
+    } else {
+      if (this.autoPilotTimer) {
+        clearTimeout(this.autoPilotTimer);
+        this.autoPilotTimer = null;
+      }
+      this.addLog("🤖 AUTOPILOT: DISENGAGED - Manual control active.");
+    }
+
+    if (this.onStateChange) this.onStateChange();
+    return this.isAutoPilot;
+  }
+
+  scheduleAutoPilotAction(delay = 800) {
+    if (this.autoPilotTimer) {
+      clearTimeout(this.autoPilotTimer);
+      this.autoPilotTimer = null;
+    }
+
+    if (!this.isAutoPilot) return;
+    if (this.battleState !== "active" && this.battleState !== "selecting_replacement") return;
+
+    this.autoPilotTimer = setTimeout(() => {
+      this.executeAutoPilotAction();
+    }, delay);
+  }
+
+  executeAutoPilotAction() {
+    if (!this.isAutoPilot) return;
+
+    // Case 1: Selecting replacement after card fainted
+    if (this.battleState === "selecting_replacement") {
+      let bestIndex = -1;
+      let bestScore = -1;
+      const defender = this.getBotActive();
+
+      this.playerDeck.forEach((cardObj, idx) => {
+        if (idx !== this.playerActiveIndex && cardObj.currentHp > 0) {
+          const hpRatio = cardObj.currentHp / cardObj.maxHp;
+          let score = hpRatio * 10;
+
+          if (defender && cardObj.element.traits && defender.element.traits) {
+            cardObj.element.traits.forEach(t => {
+              const traitInfo = this.traits[t];
+              if (traitInfo && traitInfo.strong_against) {
+                defender.element.traits.forEach(dt => {
+                  if (traitInfo.strong_against.includes(dt)) score += 5;
+                });
+              }
+            });
+          }
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestIndex = idx;
+          }
+        }
+      });
+
+      if (bestIndex !== -1) {
+        this.addLog(`🤖 AUTOPILOT: Automatically selected replacement card!`);
+        this.playerSwitchCard(bestIndex);
+      }
+      return;
+    }
+
+    // Case 2: Normal turn decision
+    if (this.turn !== "player" || this.isBusy || this.battleState !== "active") {
+      if (this.isAutoPilot && (this.turn === "player" || this.battleState === "selecting_replacement")) {
+        this.scheduleAutoPilotAction(400);
+      }
+      return;
+    }
+
+    const attacker = this.getPlayerActive();
+    const defender = this.getBotActive();
+    if (!attacker || !defender) return;
+
+    const hpRatio = attacker.currentHp / attacker.maxHp;
+
+    // Low HP tactical switch check
+    if (hpRatio < 0.25) {
+      let healthyBenchIdx = -1;
+      this.playerDeck.forEach((c, idx) => {
+        if (idx !== this.playerActiveIndex && c.currentHp / c.maxHp > 0.55) {
+          healthyBenchIdx = idx;
+        }
+      });
+
+      if (healthyBenchIdx !== -1 && Math.random() < 0.7) {
+        this.addLog(`🤖 AUTOPILOT: Low HP on ${attacker.element.name}! Tactical bench switch.`);
+        this.playerSwitchCard(healthyBenchIdx);
+        return;
+      }
+    }
+
+    // Skill Burst Check (attackCount % 3 === 2)
+    const isBurstReady = (attacker.attackCount % 3 === 2);
+    if (isBurstReady || Math.random() < 0.35) {
+      this.playerSkill();
+    } else {
+      this.playerAttack();
+    }
+  }
+
   // --- PLAYER ACTIONS ---
 
   playerAttack() {
     if (this.turn !== "player" || this.isBusy || this.battleState !== "active") return;
 
+    if (this.autoPilotTimer) {
+      clearTimeout(this.autoPilotTimer);
+      this.autoPilotTimer = null;
+    }
+
     this.isBusy = true;
     const attacker = this.getPlayerActive();
     const defender = this.getBotActive();
 
-    // Increment attack counter for 3rd attack tracking
-    attacker.attackCount = (attacker.attackCount || 0) + 1;
-    const is3rd = (attacker.attackCount % 3 === 0);
-
-    this.addLog(`Player's ${attacker.element.name} attacks${is3rd ? " (3rd ATTACK CRITICAL BURST!)" : ""}!`);
+    this.addLog(`Player's ${attacker.element.name} attacks!`);
 
     this.projectiles.push({
       startX: 0.5, startY: 0.65,
       targetX: 0.5, targetY: 0.25,
       x: 0.5, y: 0.65,
       progress: 0,
-      color: is3rd ? "#ff00ff" : "#00f2ff",
-      skill: is3rd,
+      color: "#00f2ff",
       onComplete: () => {
         const result = damagePoints({
           attacker: attacker.element,
           defender: defender.element,
           traits: this.traits,
-          attackerLevel: attacker.level || 1,
-          attackCount: attacker.attackCount
+          attackerLevel: attacker.level || 1
         });
 
         const damage = Math.max(1, result.finalDamage);
@@ -153,8 +275,11 @@ export class BattleEngine {
         let txt = `-${damage}`;
         let textColor = "#00f2ff";
 
-        if (result.is3rdAttack) {
-          txt = `⚡ CRITICAL 3rd HIT -${damage}`;
+        if (result.is3rdAttack && result.isWeak) {
+          txt = `⚡ CRIT (WEAK) -${damage}`;
+          textColor = "#ffaa00";
+        } else if (result.is3rdAttack) {
+          txt = `⚡ CRITICAL HIT -${damage}`;
           textColor = "#ff00ff";
         } else if (result.isWeak) {
           txt = `🛡️ WEAK -${damage}`;
@@ -166,8 +291,10 @@ export class BattleEngine {
 
         this.addFloatingText(0.5, 0.25, txt, textColor);
 
-        if (result.is3rdAttack) {
-          this.addLog(`⚡ 3rd ATTACK BURST! Dealt ${damage} CRITICAL damage to Bot's ${defender.element.name}!`);
+        if (result.is3rdAttack && result.isWeak) {
+          this.addLog(`⚡ CRITICAL TRAIT BURST! (WEAK AGAINST target: ${damage} damage)`);
+        } else if (result.is3rdAttack) {
+          this.addLog(`⚡ RANDOM TRAIT CRITICAL BURST! Dealt ${damage} CRITICAL damage to Bot's ${defender.element.name}!`);
         } else if (result.isWeak) {
           this.addLog(`🛡️ WEAK AGAINST! Dealt reduced ${damage} damage to Bot's ${defender.element.name}.`);
         } else {
@@ -187,6 +314,11 @@ export class BattleEngine {
 
   playerSkill() {
     if (this.turn !== "player" || this.isBusy || this.battleState !== "active") return;
+
+    if (this.autoPilotTimer) {
+      clearTimeout(this.autoPilotTimer);
+      this.autoPilotTimer = null;
+    }
 
     this.isBusy = true;
     const attacker = this.getPlayerActive();
@@ -236,6 +368,11 @@ export class BattleEngine {
     // Allow switch if it's player's turn OR if we are waiting for replacement selection
     if (this.battleState !== "selecting_replacement" && (this.turn !== "player" || this.isBusy)) return;
 
+    if (this.autoPilotTimer) {
+      clearTimeout(this.autoPilotTimer);
+      this.autoPilotTimer = null;
+    }
+
     const targetCard = this.playerDeck[targetIndex];
     if (!targetCard || targetCard.currentHp <= 0 || targetIndex === this.playerActiveIndex) {
       return;
@@ -252,6 +389,10 @@ export class BattleEngine {
       this.turn = "player";
       this.isBusy = false;
       this.addLog(`Player sent out ${targetCard.element.name}!`);
+
+      if (this.isAutoPilot) {
+        this.scheduleAutoPilotAction(800);
+      }
     } else if (this.battleState === "active") {
       this.isBusy = true;
       // Tactical mid-battle switch (uses turn)
@@ -298,29 +439,25 @@ export class BattleEngine {
         setTimeout(() => {
           this.turn = "player";
           this.isBusy = false;
+          if (this.isAutoPilot) this.scheduleAutoPilotAction(800);
           if (this.onStateChange) this.onStateChange();
         }, 800);
       } else {
         // Bot Attacks
-        botActive.attackCount = (botActive.attackCount || 0) + 1;
-        const is3rd = (botActive.attackCount % 3 === 0);
-
-        this.addLog(`Bot's ${botActive.element.name} attacks${is3rd ? " (3rd ATTACK CRITICAL BURST!)" : ""}!`);
+        this.addLog(`Bot's ${botActive.element.name} attacks!`);
 
         this.projectiles.push({
           startX: 0.5, startY: 0.25,
           targetX: 0.5, targetY: 0.65,
           x: 0.5, y: 0.25,
           progress: 0,
-          color: is3rd ? "#ff00ff" : "#ff3300",
-          skill: is3rd,
+          color: "#ff3300",
           onComplete: () => {
             const result = damagePoints({
               attacker: botActive.element,
               defender: playerActive.element,
               traits: this.traits,
-              attackerLevel: botActive.level || 1,
-              attackCount: botActive.attackCount
+              attackerLevel: botActive.level || 1
             });
 
             const damage = Math.max(1, result.finalDamage);
@@ -330,8 +467,11 @@ export class BattleEngine {
             let txt = `-${damage}`;
             let textColor = "#ff3300";
 
-            if (result.is3rdAttack) {
-              txt = `⚡ CRITICAL 3rd HIT -${damage}`;
+            if (result.is3rdAttack && result.isWeak) {
+              txt = `⚡ CRIT (WEAK) -${damage}`;
+              textColor = "#ffaa00";
+            } else if (result.is3rdAttack) {
+              txt = `⚡ CRITICAL HIT -${damage}`;
               textColor = "#ff00ff";
             } else if (result.isWeak) {
               txt = `🛡️ WEAK -${damage}`;
@@ -340,8 +480,10 @@ export class BattleEngine {
 
             this.addFloatingText(0.5, 0.65, txt, textColor);
 
-            if (result.is3rdAttack) {
-              this.addLog(`⚡ BOT 3rd ATTACK BURST! Dealt ${damage} CRITICAL damage to your ${playerActive.element.name}!`);
+            if (result.is3rdAttack && result.isWeak) {
+              this.addLog(`⚡ BOT CRITICAL BURST! (WEAK AGAINST target: ${damage} damage)`);
+            } else if (result.is3rdAttack) {
+              this.addLog(`⚡ BOT CRITICAL BURST! Dealt ${damage} CRITICAL damage to your ${playerActive.element.name}!`);
             } else if (result.isWeak) {
               this.addLog(`🛡️ BOT WEAK AGAINST! Dealt reduced ${damage} damage to your ${playerActive.element.name}.`);
             } else {
@@ -353,6 +495,7 @@ export class BattleEngine {
             } else {
               this.turn = "player";
               this.isBusy = false;
+              if (this.isAutoPilot) this.scheduleAutoPilotAction(800);
               if (this.onStateChange) this.onStateChange();
             }
           }
@@ -392,6 +535,7 @@ export class BattleEngine {
         this.addLog(`Bot sent out ${this.getBotActive().element.name}!`);
         this.turn = "player";
         this.isBusy = false;
+        if (this.isAutoPilot) this.scheduleAutoPilotAction(800);
       } else {
         this.battleState = "victory";
         this.addLog("VICTORY! All enemy cards eliminated!");
@@ -404,6 +548,7 @@ export class BattleEngine {
         this.turn = "player";
         this.isBusy = false;
         this.addLog("Choose a replacement card from your bench!");
+        if (this.isAutoPilot) this.scheduleAutoPilotAction(600);
       } else {
         this.battleState = "defeat";
         this.addLog("DEFEAT! All your cards were destroyed!");
