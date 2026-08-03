@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0 (2026-08-04)
+- **Boiling Point Stat Integration:** Replaced standard card HP with element Boiling Points (`boiling_point_k` / `boiling_point_c`) across element datasets, battle logic, and card status rendering.
+- **Critical Strike Mechanics:** Introduced critical hit chances and dynamic critical multiplier damage during battle turn resolutions.
+- **Battle Resolution Refinement:** Updated combat formulas and score computation in `battleEngine.js` and `score.js` to incorporate critical strikes and boiling point stats.
+
+## 1.1.0 (2026-08-03)
+- **Interactive Battle Engine:** Introduced `battleEngine.js` supporting dynamic turn-based element battles, combat animations, phase transitions, and visual damage popups.
+- **Game Lobby & Authentication:** Added a game lobby interface (`lobby.js`), user authentication UI (`auth.js`), and user profile viewer (`profile.js`).
+- **User Data Backend:** Created `user_data.json` and REST API endpoints (`/users`, `/login`, `/user/:username/cards`) for user persistence and card collection retrieval.
+- **Animated Components:** Implemented dynamic canvas background particle systems (`background.js`) and battle status overlays (`battle.js`).
+- **UI & Styling Overhaul:** Redesigned game styles using modern glassmorphism layouts, battle animations, and modal overlays (`style.css`).
+
+## 1.0.1 (2026-06-09)
+- **Canvas Bounds Fix:** Resolved canvas background element rendering out-of-bounds issue.
+- **Initialization Fix:** Fixed game load error during initial canvas setup (`main.js`).
+- **Documentation & Note Tags:** Added JSDoc inline note tags across card widget, score engine, and UI modules.
+
 ## 1.0.0 (2026-06-08)
 - **Architectural Shift:** Migrated from Svelte/Next.js to a streamlined HTML5 Canvas and Express implementation.
 - **Backend Setup:** Established a robust Express server to serve static files and JSON data.
