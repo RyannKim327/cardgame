@@ -6,15 +6,18 @@ A web-based card game centered around the elements of the Periodic Table. Origin
 
 ## Features
 
-- **Element-Based Gameplay:** Cards represent chemical elements with unique properties and traits.
-- **Canvas Rendering:** High-performance rendering engine using HTML5 Canvas for smooth card interactions.
-- **RESTful API:** Express-powered backend providing element data and traits.
+- **Element-Based Gameplay:** Cards represent chemical elements with unique properties, traits, and scientific attributes.
+- **Scientific Element Stats:** Card attributes (such as Health/HP) are dynamically derived from element **Boiling Points** (`boiling_point_k` / `boiling_point_c`) alongside critical hit chances.
+- **Interactive Battle Engine:** Animated turn-based combat with attack/defense phases, dynamic damage calculation, critical hit multipliers, and combat status popups.
+- **Game Lobby & Authentication:** Interactive lobby navigation, user authentication screens, and profile/collection viewer.
+- **Canvas & Animated UI:** High-performance rendering engine using HTML5 Canvas with dynamic background particle effects and modern glassmorphic UI overlay.
+- **RESTful API & Data Persistence:** Express backend serving element datasets, traits, and user profile persistence (`user_data.json`).
 - **Lightweight Design:** Minimal dependencies for fast loading and easy deployment.
 
 ## Tech Stack
 
 - **Backend:** [Express](https://expressjs.com/) (Node.js)
-- **Frontend:** Vanilla JavaScript (ES Modules), HTML5 Canvas
+- **Frontend:** Vanilla JavaScript (ES Modules), HTML5 Canvas, Modern CSS3
 - **Language:** [TypeScript](https://www.typescriptlang.org/) (Backend)
 - **Execution:** [tsx](https://github.com/privatenumber/tsx) for seamless TypeScript execution
 
@@ -22,19 +25,31 @@ A web-based card game centered around the elements of the Periodic Table. Origin
 
 ```text
 cardgame/
-├── data/                  # JSON data for elements and traits
-│   ├── elements.json
-│   └── traits.json
-├── public/                # Static assets and frontend logic
-│   ├── app.js             # Main entry point for Canvas rendering
-│   ├── utils.js           # Shared frontend utilities
-│   └── process/           # Client-side logic for API and scoring
-│       ├── api.js
-│       └── score.js
+├── data/                  # JSON data for elements, traits, and user profiles
+│   ├── elements.json      # Periodic table element properties & stats
+│   ├── traits.json        # Element trait multipliers and effects
+│   └── user_data.json     # Player profiles, decks, and user credentials
+├── public/                # Static assets, UI components, and rendering logic
+│   ├── main.js            # Main application entry point and scene manager
+│   ├── style.css          # Visual styling, glassmorphic UI, and battle HUD overlay
+│   ├── utils.js           # Shared frontend utilities and math helpers
+│   ├── component/         # Reusable canvas visual components
+│   │   └── background.js  # Animated canvas particle background engine
+│   ├── process/           # Client-side core game mechanics
+│   │   ├── api.js         # REST API communication client
+│   │   ├── battleEngine.js# Turn-based battle state machine & flow controller
+│   │   └── score.js       # Damage, stats, and critical strike calculator
+│   ├── ui/                # UI screens and modal view handlers
+│   │   ├── auth.js        # User login and authentication UI
+│   │   ├── battle.js      # Battle scene HUD controls and overlay
+│   │   ├── lobby.js       # Game lobby interface and navigation
+│   │   └── profile.js     # Player profile viewer and deck inspector
+│   └── widgets/           # Renderable canvas elements
+│       └── card.js        # Card component renderer, frames, and visual animations
 ├── src/
-│   ├── index.ts           # Express server implementation
+│   ├── index.ts           # Express server & REST API endpoints
 │   └── template/
-│       └── index.html     # Main application template
+│       └── index.html     # HTML5 application template and container
 ├── LICENSE.md             # Project license
 ├── package.json           # Project metadata and dependencies
 └── README.md              # Project documentation
