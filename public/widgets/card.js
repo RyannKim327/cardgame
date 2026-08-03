@@ -1,3 +1,5 @@
+import { hpComputation, attackComputation } from "../utils.js";
+
 const rarityConfig = {
   abundant: { color: "#b0b0b0", secondary: "#808080", text: "#ffffff", animated: false, radius: 5 },
   common: { color: "#4caf50", secondary: "#2e7d32", text: "#e8f5e9", animated: false, radius: 5 },
@@ -203,10 +205,11 @@ export default function card(ctx, info, bg = false) {
   ctx.fillStyle = rarity.text
   ctx.fillText(element.name, x + w / 2, sqY + sqH + h * 0.25)
 
-  // TODO: Level badge (Top Left) & HP (Top Right)
+  // TODO: Level badge (Top Left), HP (Top Right), and ATK (Bottom)
   if (!bg) {
     const level = element.level || 1;
-    const calculatedMaxHp = maxHp !== undefined ? maxHp : (Number(element.hp) + (level * 5));
+    const calculatedMaxHp = maxHp !== undefined ? maxHp : hpComputation(level, element.hp);
+    const maxDamage = attackComputation(level, element.reactivity, element.reactivity, element.hp).maxDamage;
 
     // Level Badge
     ctx.font = `bold ${w * 0.09}px sans-serif`
