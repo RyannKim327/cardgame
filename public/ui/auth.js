@@ -1,3 +1,5 @@
+import api from '../process/api.js';
+
 export function initAuth(onLoginSuccess) {
     const authView = document.getElementById('auth-view');
     const loginForm = document.getElementById('login-form');
@@ -9,7 +11,6 @@ export function initAuth(onLoginSuccess) {
     const btnLogin = document.getElementById('btn-login');
     const btnRegister = document.getElementById('btn-register');
 
-    // TODO: Toggle between login and register
     linkShowRegister.addEventListener('click', (e) => {
         e.preventDefault();
         loginForm.classList.add('hidden');
@@ -22,13 +23,22 @@ export function initAuth(onLoginSuccess) {
         loginForm.classList.remove('hidden');
     });
 
-    // TODO: Mock Login
-    btnLogin.addEventListener('click', () => {
+    btnLogin.addEventListener('click', async () => {
         const username = document.getElementById('login-username').value;
-        if (username) {
-            onLoginSuccess({ username, id: 'USR-' + Math.floor(Math.random() * 1000) });
+        const password = document.getElementById('login-password').value;
+
+        if (!username || !password) {
+            alert('Please enter both username and password.');
+            return;
+        }
+
+        const client = api();
+        const res = await client.post('/login', { username, password });
+
+        if (res && res.success && res.user) {
+            onLoginSuccess(res.user);
         } else {
-            alert('Please enter a username');
+            alert(res.error || 'Invalid username or password.');
         }
     });
 

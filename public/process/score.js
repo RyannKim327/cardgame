@@ -1,79 +1,62 @@
 /**
- * Calculates extra damage based on element traits and reactivity passives.
+ * Calculates damage points for card interactions based on:
+ * 1. Base Attack = raw element.reactivity
+ * 2. Max Damage = attack + (level * 5)
+ * 3. Random Damage between min (1) and maxDamage
+ * 4. Trait multiplier (Weak Against lessens damage by 35%)
+ * 5. Automatic 3rd Attack Critical Skill Burst (1.75x multiplier)
  * 
- * @param {number} partial - Base random damage.
- * @param {object} attacker - Attacker element object (from elements.json).
- * @param {object} defender - Defender element object (from elements.json).
- * @param {object} traitsData - Traits relationship data (from traits.json).
- * @returns {object} Calculated damage details and status effects.
+ * @param {object} data - Object containing attacker, defender, traits, attackerLevel, attackCount.
  */
+export function damagePoints(data) {
+	const { attacker, defender, traits, attackerLevel = 1, attackCount = 1 } = data;
 
-function damageExtras(partial, attacker, defender, traitsData) {
-	// TODO: Passive damage based on reactivity: "divide it into 5" or "more or less 2" for 8
-	const passiveDamage = Math.round(attacker.reactivity / 5)
+	// Base attack power directly from raw element.reactivity
+	const attackPower = Number(attacker.reactivity) || 1;
+	const maxDamage = attackPower + (attackerLevel * 5);
+	const minDamage = 1;
 
-	// TODO: True damage: "8 as true damage like literally -8 in HP"
-	const trueDamage = attacker.reactivity
+	// Random damage between min (1) and maxDamage
+	const rawDamage = Math.floor(Math.random() * (maxDamage - minDamage + 1)) + minDamage;
 
-	// TODO: Trait-based multiplier logic
-	let traitMultiplier = 1.0
-	if (traitsData && attacker.traits && defender.traits) {
+	// Trait relations: weak_against lessens damage, strong_against boosts damage
+	let traitMultiplier = 1.0;
+	let isWeak = false;
+	let isStrong = false;
+
+	if (traits && attacker.traits && defender.traits) {
 		attacker.traits.forEach(aTrait => {
-			const traitInfo = traitsData[aTrait]
+			const traitInfo = traits[aTrait];
 			if (traitInfo) {
 				defender.traits.forEach(dTrait => {
-					// Check for strong against (e.g., metal vs nonmetal, oxidizer vs reducer)
-					if (traitInfo.strong_against.includes(dTrait) ||
-						(dTrait === 'metal' && traitInfo.strong_against.includes('metals'))) {
-						traitMultiplier += 0.2
+					// Check if attacker trait is weak against defender trait
+					if (traitInfo.weak_against && traitInfo.weak_against.includes(dTrait)) {
+						traitMultiplier *= 0.65; // Lessens damage by 35%!
+						isWeak = true;
 					}
-					// Check for weak against
-					if (traitInfo.weak_against.includes(dTrait)) {
-						traitMultiplier -= 0.1
+					// Check if attacker trait is strong against defender trait
+					if (traitInfo.strong_against && traitInfo.strong_against.includes(dTrait)) {
+						traitMultiplier *= 1.35;
+						isStrong = true;
 					}
-				})
+				});
 			}
-		})
+		});
 	}
 
-	// INFO:
-	// Status effects: "paralize in human due to its passive"
-	// High reactivity (8+) can cause paralysis
-	const status = attacker.reactivity >= 8 ? "paralyzed" : null
+	// Automatic 3rd Attack Critical Burst
+	const is3rdAttack = (attackCount > 0 && attackCount % 3 === 0);
+	const critMultiplier = is3rdAttack ? 1.75 : 1.0;
 
-	// INFO:
-	// Total calculation: (base + passive) * multiplier + true damage
-	// True damage is added at the end as it bypasses standard defenses/multipliers.
-	const totalCalculated = Math.floor((partial + passiveDamage) * traitMultiplier) + trueDamage
+	const finalDamage = Math.max(1, Math.floor(rawDamage * traitMultiplier * critMultiplier));
 
 	return {
-		total: totalCalculated,
-		trueDamage: trueDamage,
-		passiveDamage: passiveDamage,
-		multiplier: traitMultiplier,
-		status: status
-	}
-}
-
-/**
- * Main function to calculate damage points for an interaction.
- * 
- * @param {object} data - Object containing attacker, defender, traits, and elements data.
- */
-
-export function damagePoints(data) {
-	const { attacker, defender, traits } = data
-
-	const totalHp = 100
-	const partialDamage = totalHp * 0.3
-	const randomDamage = Math.floor(Math.random() * partialDamage)
-
-	const extras = damageExtras(randomDamage, attacker, defender, traits)
-
-	return {
-		baseDamage: randomDamage,
-		extras: extras,
-		finalDamage: extras.total,
-		targetStatus: extras.status
-	}
+		rawDamage: rawDamage,
+		maxDamage: maxDamage,
+		finalDamage: finalDamage,
+		isWeak: isWeak,
+		isStrong: isStrong,
+		is3rdAttack: is3rdAttack,
+		multiplier: traitMultiplier * critMultiplier
+	};
 }

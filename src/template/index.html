@@ -59,8 +59,76 @@
 						<span id="display-username" class="value">GUEST</span>
 					</div>
 					<div class="hud-actions">
+						<button id="btn-battle" class="btn-hud">Battle</button>
 						<button id="btn-profile" class="btn-hud">PROFILE</button>
 						<button id="btn-logout" class="btn-hud">LOGOUT</button>
+					</div>
+				</div>
+
+				<div class="lobby-scroll-controls">
+					<button id="btn-scroll-up" class="btn-scroll-hud" title="Scroll Up">▲ UP</button>
+					<button id="btn-scroll-down" class="btn-scroll-hud" title="Scroll Down">▼ DOWN</button>
+				</div>
+			</div>
+
+			<div id="deck-select-view" class="view hidden">
+				<div class="panel deck-select-panel">
+					<h2 class="glitch" data-text="DECK SELECTION">DECK SELECTION</h2>
+					<p class="deck-subtitle">Select 3 element cards to bring into battle</p>
+
+					<div id="deck-select-grid" class="deck-select-grid"></div>
+
+					<div class="deck-select-footer">
+						<div class="selection-status">
+							SELECTED: <span id="select-count-text" class="value">0/3</span>
+						</div>
+						<div class="deck-btn-group">
+							<button id="btn-auto-select" class="btn-hud">AUTO SELECT</button>
+							<button id="btn-start-battle" class="btn-primary" disabled>INITIATE BATTLE</button>
+							<button id="btn-cancel-deck" class="btn-hud">CANCEL</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="battle-view" class="view hidden">
+				<div class="battle-hud-top">
+					<div class="opponent-info">
+						<span class="label">OPPONENT:</span>
+						<span class="value">BOT AI</span>
+					</div>
+					<div class="turn-badge-container">
+						<span id="turn-badge" class="turn-badge">YOUR TURN</span>
+					</div>
+					<div class="battle-actions-top">
+						<button id="btn-retreat" class="btn-hud">RETREAT</button>
+					</div>
+				</div>
+
+				<div class="battle-log-box">
+					<div id="battle-log-msg">Preparing elemental battle arena...</div>
+				</div>
+
+				<!-- Bench Switch Tray Modal -->
+				<div id="switch-modal-overlay" class="switch-overlay hidden">
+					<div class="panel switch-panel">
+						<h3>TACTICAL CARD SWITCH</h3>
+						<div id="switch-cards-container" class="switch-grid"></div>
+						<button id="btn-close-switch" class="btn-hud mt-2">CANCEL</button>
+					</div>
+				</div>
+
+				<div class="battle-hud-bottom">
+					<div class="battle-action-bar">
+						<button id="btn-attack" class="btn-action btn-attack">
+							<span class="action-icon">⚔️</span> ATTACK
+						</button>
+						<button id="btn-skill" class="btn-action btn-skill">
+							<span class="action-icon">⚡</span> TRAIT SKILL
+						</button>
+						<button id="btn-switch" class="btn-action btn-switch">
+							<span class="action-icon">🔄</span> SWITCH CARD
+						</button>
 					</div>
 				</div>
 			</div>
@@ -84,6 +152,18 @@
 							<span class="label">RANK:</span>
 							<span class="value">NOVICE</span>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Battle Result Modal -->
+			<div id="battle-result-overlay" class="hidden">
+				<div class="panel result-panel">
+					<h1 id="result-title" class="glitch">VICTORY</h1>
+					<p id="result-message">All enemy elements eliminated!</p>
+					<div class="result-actions">
+						<button id="btn-battle-again" class="btn-primary">BATTLE AGAIN</button>
+						<button id="btn-battle-exit" class="btn-hud">RETURN TO LOBBY</button>
 					</div>
 				</div>
 			</div>
