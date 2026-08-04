@@ -4,6 +4,7 @@ import { hpComputation, attackComputation } from "../utils.js";
 
 let battleEngine = null;
 let selectedPlayerElements = [];
+let lastUsedDeckIds = [];
 
 export function initBattleField(ctx, canvas, state) {
   battleEngine = new BattleEngine();
@@ -68,6 +69,7 @@ export function initBattleField(ctx, canvas, state) {
         renderDeckSelectionGrid(state.elements, state);
       }
       if (selectedPlayerElements.length === 3) {
+        lastUsedDeckIds = selectedPlayerElements.map((el) => el.id);
         state.view = "battle";
         deckSelectView.classList.add("hidden");
         battleView.classList.remove("hidden");
@@ -83,6 +85,7 @@ export function initBattleField(ctx, canvas, state) {
   btnStartBattle.addEventListener("click", () => {
     if (selectedPlayerElements.length !== 3) return;
 
+    lastUsedDeckIds = selectedPlayerElements.map((el) => el.id);
     state.view = "battle";
     deckSelectView.classList.add("hidden");
     battleView.classList.remove("hidden");
@@ -130,17 +133,25 @@ export function initBattleField(ctx, canvas, state) {
     resultOverlay.classList.add("hidden");
     switchOverlay.classList.add("hidden");
 
-    // If Auto Pilot was enabled, restart battle immediately with same deck or deck selection
-    if (battleEngine && battleEngine.isAutoPilot && selectedPlayerElements.length === 3) {
-      battleEngine.init(selectedPlayerElements, state.traits || {}, state.elements);
-      battleEngine.toggleAutoPilot(true);
-      updateHUD();
-    } else {
-      state.view = "deck_select";
-      battleView.classList.add("hidden");
-      deckSelectView.classList.remove("hidden");
-      renderDeckSelectionGrid(state.elements, state);
+    // Clear previous deck selection so player must select another set of cards for next battle
+    selectedPlayerElements = [];
+
+    // If Auto Pilot was enabled, auto select a new set of cards and restart battle directly
+    if (battleEngine && battleEngine.isAutoPilot) {
+      autoSelectDeck(state);
+      if (selectedPlayerElements.length === 3) {
+        lastUsedDeckIds = selectedPlayerElements.map((el) => el.id);
+        battleEngine.init(selectedPlayerElements, state.traits || {}, state.elements);
+        battleEngine.toggleAutoPilot(true);
+        updateHUD();
+        return;
+      }
     }
+
+    state.view = "deck_select";
+    battleView.classList.add("hidden");
+    deckSelectView.classList.remove("hidden");
+    renderDeckSelectionGrid(state.elements, state);
   });
 
   btnBattleExit.addEventListener("click", () => {
@@ -174,8 +185,17 @@ function autoSelectDeck(state) {
 
   if (ownedElements.length < 3) return;
 
-  const shuffled = [...ownedElements].sort(() => 0.5 - Math.random());
-  selectedPlayerElements = shuffled.slice(0, 3);
+  // Separate owned cards into unused vs used in previous battle
+  const unusedCards = ownedElements.filter((el) => !lastUsedDeckIds.includes(el.id));
+  const usedCards = ownedElements.filter((el) => lastUsedDeckIds.includes(el.id));
+
+  // Shuffle both sets independently
+  const shuffledUnused = [...unusedCards].sort(() => 0.5 - Math.random());
+  const shuffledUsed = [...usedCards].sort(() => 0.5 - Math.random());
+
+  // Prioritize unused cards so player gets a different set of cards when available
+  const combined = [...shuffledUnused, ...shuffledUsed];
+  selectedPlayerElements = combined.slice(0, 3);
 }
 
 function renderDeckSelectionGrid(elements, state) {
@@ -382,6 +402,7 @@ function openSwitchModal() {
 
 function exitBattle(state) {
   state.view = "lobby";
+  selectedPlayerElements = [];
   document.getElementById("deck-select-view").classList.add("hidden");
   document.getElementById("battle-view").classList.add("hidden");
   document.getElementById("battle-result-overlay").classList.add("hidden");
