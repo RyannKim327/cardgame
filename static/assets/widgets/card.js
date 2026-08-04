@@ -170,7 +170,7 @@ export default function card(ctx, info, bg = false) {
   const sqW = w - (sqMargin * 2)
   const sqH = h * 0.3
   const sqX = x + sqMargin
-  const sqY = y + h * 0.22
+  const sqY = y + Math.max(22, h * 0.25)
 
   // TODO: Draw the square with a solid "any color" (Dark slate for professional look)
   ctx.fillStyle = "rgba(10, 10, 10, 0.5)"
@@ -196,33 +196,38 @@ export default function card(ctx, info, bg = false) {
 
   // TODO: Symbol
   ctx.fillStyle = rarity.text
-  ctx.font = `bold ${w * 0.3}px sans-serif`
+  ctx.font = `bold ${Math.max(12, Math.round(w * 0.28))}px sans-serif`
   ctx.textAlign = "center"
-  ctx.fillText(element.id, x + w / 2, sqY + sqH * 0.75)
+  ctx.fillText(element.id, x + w / 2, sqY + sqH * 0.72)
 
   // TODO: Name
-  ctx.font = `bold ${w * 0.1}px sans-serif`
+  const nameFontSize = Math.max(9, Math.round(w * 0.10))
+  ctx.font = `bold ${nameFontSize}px sans-serif`
   ctx.fillStyle = rarity.text
-  ctx.fillText(element.name, x + w / 2, sqY + sqH + h * 0.25)
+  const nameY = sqY + sqH + (y + h - (sqY + sqH)) * 0.55
+  ctx.fillText(element.name, x + w / 2, nameY)
 
-  // TODO: Level badge (Top Left), HP (Top Right), and ATK (Bottom)
+  // TODO: Level badge (Top Left) and HP (Top Right)
   if (!bg) {
     const level = element.level || 1;
     const calculatedMaxHp = maxHp !== undefined ? maxHp : hpComputation(level, element.hp);
-    const maxDamage = attackComputation(level, element.reactivity, element.reactivity, element.hp).maxDamage;
+
+    const headerFontSize = Math.max(10, Math.round(w * 0.095));
+    const headerY = y + Math.max(13, h * 0.16);
+    const headerPad = Math.max(5, Math.round(w * 0.06));
 
     // Level Badge
-    ctx.font = `bold ${w * 0.09}px sans-serif`
+    ctx.font = `bold ${headerFontSize}px sans-serif`
     ctx.textAlign = "left"
     ctx.fillStyle = "#ffaa00"
-    ctx.fillText(`Lv.${level}`, x + 10, y + 22)
+    ctx.fillText(`Lv.${level}`, x + headerPad, headerY)
 
     // HP Text
-    ctx.font = `bold ${w * 0.09}px sans-serif`
+    ctx.font = `bold ${headerFontSize}px sans-serif`
     ctx.textAlign = "right"
     ctx.fillStyle = rarity.text
     const displayHp = currentHp !== undefined ? `${currentHp}/${calculatedMaxHp}` : `HP ${calculatedMaxHp}`
-    ctx.fillText(displayHp, x + w - 10, y + 22)
+    ctx.fillText(displayHp, x + w - headerPad, headerY)
   }
 
   ctx.restore()

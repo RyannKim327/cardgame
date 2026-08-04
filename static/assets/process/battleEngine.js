@@ -15,6 +15,10 @@ export class BattleEngine {
     this.isBusy = false;
     this.battleState = "idle"; // "idle" | "active" | "selecting_replacement" | "victory" | "defeat"
 
+    // Slanted Battling Card Positions (Opponent near top-right stack, Player near bottom-left stack)
+    this.playerActiveRel = { x: 0.28, y: 0.58 };
+    this.botActiveRel = { x: 0.72, y: 0.28 };
+
     // Auto Pilot State
     this.isAutoPilot = false;
     this.autoPilotTimer = null;
@@ -255,9 +259,9 @@ export class BattleEngine {
     this.addLog(`Player's ${attacker.element.name} attacks!`);
 
     this.projectiles.push({
-      startX: 0.5, startY: 0.65,
-      targetX: 0.5, targetY: 0.25,
-      x: 0.5, y: 0.65,
+      startX: this.playerActiveRel.x, startY: this.playerActiveRel.y,
+      targetX: this.botActiveRel.x, targetY: this.botActiveRel.y,
+      x: this.playerActiveRel.x, y: this.playerActiveRel.y,
       progress: 0,
       color: "#00f2ff",
       onComplete: () => {
@@ -289,7 +293,7 @@ export class BattleEngine {
           textColor = "#ffaa00";
         }
 
-        this.addFloatingText(0.5, 0.25, txt, textColor);
+        this.addFloatingText(this.botActiveRel.x, this.botActiveRel.y, txt, textColor);
 
         if (result.is3rdAttack && result.isWeak) {
           this.addLog(`⚡ CRITICAL TRAIT BURST! (WEAK AGAINST target: ${damage} damage)`);
@@ -331,9 +335,9 @@ export class BattleEngine {
     this.addLog(`Player's ${attacker.element.name} activates ${traitName.toUpperCase()} SKILL!`);
 
     this.projectiles.push({
-      startX: 0.5, startY: 0.65,
-      targetX: 0.5, targetY: 0.25,
-      x: 0.5, y: 0.65,
+      startX: this.playerActiveRel.x, startY: this.playerActiveRel.y,
+      targetX: this.botActiveRel.x, targetY: this.botActiveRel.y,
+      x: this.playerActiveRel.x, y: this.playerActiveRel.y,
       progress: 0,
       color: "#ff00ff",
       skill: true,
@@ -350,7 +354,7 @@ export class BattleEngine {
         defender.currentHp = Math.max(0, defender.currentHp - damage);
         defender.shake = 25;
 
-        this.addFloatingText(0.5, 0.25, `CRITICAL -${damage}`, "#ff00ff");
+        this.addFloatingText(this.botActiveRel.x, this.botActiveRel.y, `CRITICAL -${damage}`, "#ff00ff");
         this.addLog(`Skill hit for ${damage} damage!`);
 
         if (defender.currentHp <= 0) {
@@ -447,9 +451,9 @@ export class BattleEngine {
         this.addLog(`Bot's ${botActive.element.name} attacks!`);
 
         this.projectiles.push({
-          startX: 0.5, startY: 0.25,
-          targetX: 0.5, targetY: 0.65,
-          x: 0.5, y: 0.25,
+          startX: this.botActiveRel.x, startY: this.botActiveRel.y,
+          targetX: this.playerActiveRel.x, targetY: this.playerActiveRel.y,
+          x: this.botActiveRel.x, y: this.botActiveRel.y,
           progress: 0,
           color: "#ff3300",
           onComplete: () => {
@@ -478,7 +482,7 @@ export class BattleEngine {
               textColor = "#88aaff";
             }
 
-            this.addFloatingText(0.5, 0.65, txt, textColor);
+            this.addFloatingText(this.playerActiveRel.x, this.playerActiveRel.y, txt, textColor);
 
             if (result.is3rdAttack && result.isWeak) {
               this.addLog(`⚡ BOT CRITICAL BURST! (WEAK AGAINST target: ${damage} damage)`);
@@ -611,13 +615,15 @@ export class BattleEngine {
     const cardW = Math.min(160, w * 0.18);
     const cardH = cardW * 1.4;
 
-    // Bot Active Card Slot (Top battlefield)
+    // Bot Active Card Slot (Top-Right battlefield near opponent stack cards)
     const botActive = this.getBotActive();
     if (botActive && botActive.status !== "defeated") {
-      const bx = w * 0.5 - cardW * 0.5 + (Math.random() - 0.5) * botActive.shake;
-      const by = h * 0.22 - cardH * 0.5;
+      const bxCenter = w * this.botActiveRel.x;
+      const byCenter = h * this.botActiveRel.y;
+      const bx = bxCenter - cardW * 0.5 + (Math.random() - 0.5) * botActive.shake;
+      const by = byCenter - cardH * 0.5;
 
-      this.drawSlotPedestal(ctx, w * 0.5, h * 0.22 + cardH * 0.5 + 10, cardW * 0.7, "#ff3300", time);
+      this.drawSlotPedestal(ctx, bxCenter, byCenter + cardH * 0.5 + 8, cardW * 0.7, "#ff3300", time);
 
       card(ctx, {
         x: bx, y: by, w: cardW, h: cardH,
@@ -629,16 +635,18 @@ export class BattleEngine {
       });
 
       // Health Bar
-      this.drawHealthBar(ctx, bx, by - 25, cardW, botActive.currentHp, botActive.maxHp, "BOT ACTIVE", botActive.level, botActive.attackCount);
+      this.drawHealthBar(ctx, bx, by - 28, cardW, botActive.currentHp, botActive.maxHp, "BOT ACTIVE", botActive.level, botActive.attackCount);
     }
 
-    // Player Active Card Slot (Bottom battlefield)
+    // Player Active Card Slot (Bottom-Left battlefield near player stack cards)
     const playerActive = this.getPlayerActive();
     if (playerActive && playerActive.status !== "defeated") {
-      const px = w * 0.5 - cardW * 0.5 + (Math.random() - 0.5) * playerActive.shake;
-      const py = h * 0.62 - cardH * 0.5;
+      const pxCenter = w * this.playerActiveRel.x;
+      const pyCenter = h * this.playerActiveRel.y;
+      const px = pxCenter - cardW * 0.5 + (Math.random() - 0.5) * playerActive.shake;
+      const py = pyCenter - cardH * 0.5;
 
-      this.drawSlotPedestal(ctx, w * 0.5, h * 0.62 + cardH * 0.5 + 10, cardW * 0.7, "#00f2ff", time);
+      this.drawSlotPedestal(ctx, pxCenter, pyCenter + cardH * 0.5 + 8, cardW * 0.7, "#00f2ff", time);
 
       card(ctx, {
         x: px, y: py, w: cardW, h: cardH,
@@ -684,24 +692,37 @@ export class BattleEngine {
   }
 
   drawArena(ctx, w, h, time) {
-    // Battle Center Arena Line
+    // Battle Arena Mid-Field Slanted Line
     ctx.save();
     ctx.strokeStyle = "rgba(0, 242, 255, 0.2)";
     ctx.lineWidth = 2;
     ctx.setLineDash([15, 10]);
     ctx.beginPath();
-    ctx.moveTo(50, h * 0.45);
-    ctx.lineTo(w - 50, h * 0.45);
+    ctx.moveTo(w * 0.08, h * 0.32);
+    ctx.lineTo(w * 0.92, h * 0.54);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Glowing Clash Center Emblem
+    // Glowing Clash Center Emblem (at mid-point between slanted card positions)
+    const midX = w * ((this.playerActiveRel.x + this.botActiveRel.x) / 2);
+    const midY = h * ((this.playerActiveRel.y + this.botActiveRel.y) / 2);
     ctx.strokeStyle = "rgba(0, 242, 255, 0.5)";
     ctx.shadowBlur = 10 + Math.sin(time * 3) * 5;
     ctx.shadowColor = "#00f2ff";
     ctx.beginPath();
-    ctx.arc(w * 0.5, h * 0.45, 35 + Math.sin(time * 2) * 5, 0, Math.PI * 2);
+    ctx.arc(midX, midY, 35 + Math.sin(time * 2) * 5, 0, Math.PI * 2);
     ctx.stroke();
+
+    // Slanted clash trajectory axis
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(w * this.playerActiveRel.x, h * this.playerActiveRel.y);
+    ctx.lineTo(w * this.botActiveRel.x, h * this.botActiveRel.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
     ctx.restore();
   }
 
@@ -723,15 +744,11 @@ export class BattleEngine {
     const burstCount = attackCount % 3;
     const burstText = burstCount === 2 ? "⚡BURST READY" : `[Atk ${burstCount}/3]`;
 
-    // Label
+    // HP Label (Above health bar)
     ctx.font = "bold 11px sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "left";
     ctx.fillText(`${label} Lv.${level}: ${currentHp}/${maxHp}`, x, y - 4);
-
-    ctx.textAlign = "right";
-    ctx.fillStyle = burstCount === 2 ? "#ff00ff" : "#00f2ff";
-    ctx.fillText(burstText, x + width, y - 4);
 
     // Track
     ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
@@ -750,6 +767,14 @@ export class BattleEngine {
     ctx.beginPath();
     ctx.roundRect(x, y, width * ratio, 8, 4);
     ctx.fill();
+
+    // Colored Attack / Burst Text (Under health bar)
+    ctx.font = "bold 11px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillStyle = burstCount === 2 ? "#ff00ff" : "#00f2ff";
+    ctx.shadowBlur = burstCount === 2 ? 6 : 0;
+    ctx.shadowColor = burstCount === 2 ? "#ff00ff" : "transparent";
+    ctx.fillText(burstText, x + width, y + 19);
 
     ctx.restore();
   }
@@ -805,10 +830,10 @@ export class BattleEngine {
   }
 
   renderBotBench(ctx, w, h, time) {
-    const benchW = 55;
+    const benchW = 60;
     const benchH = benchW * 1.4;
     const startX = w - 30 - 3 * (benchW + 10);
-    const startY = 70;
+    const startY = 25;
 
     ctx.save();
     ctx.font = "bold 11px sans-serif";
