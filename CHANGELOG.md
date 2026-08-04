@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 (2026-08-04)
+- **Rust Backend Migration:** Rewrote the backend server from Node.js/Express to Rust utilizing [Axum](https://github.com/tokio-rs/axum) (`0.8.9`), [Tokio](https://tokio.rs/) (`1.53.1`), and [Tower HTTP](https://github.com/tower-rs/tower-http) (`0.7`).
+- **Static Asset Restructuring:** Relocated and organized frontend HTML, JavaScript components, and CSS into the `static/` directory served directly via `tower_http::services::ServeDir`.
+- **Typed REST API Endpoints:** Built strongly-typed handlers in `src/endpoints/` (`elements.rs`, `login.rs`, `traits.rs`, `users.rs`) backed by Serde data models in `src/interface.rs`.
+- **Automated Testing:** Integrated an asynchronous test suite in `src/main.rs` covering JSON deserialization and authentication logic.
+
 ## 1.2.0 (2026-08-04)
 - **Boiling Point Stat Integration:** Replaced standard card HP with element Boiling Points (`boiling_point_k` / `boiling_point_c`) across element datasets, battle logic, and card status rendering.
 - **Critical Strike Mechanics:** Introduced critical hit chances and dynamic critical multiplier damage during battle turn resolutions.
