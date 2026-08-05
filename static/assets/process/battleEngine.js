@@ -50,7 +50,7 @@ export class BattleEngine {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       try {
         this.socket.send(JSON.stringify({ type: "cancel_queue" }));
-      } catch (e) {}
+      } catch (e) { }
     }
   }
 
@@ -131,7 +131,7 @@ export class BattleEngine {
     this.username = window.currentUser ? window.currentUser.username : "OPERATOR";
 
     if (this.socket) {
-      try { this.socket.close(); } catch (e) {}
+      try { this.socket.close(); } catch (e) { }
     }
 
     if (this.mode === "vs_human") {
@@ -159,7 +159,7 @@ export class BattleEngine {
               this.battleId = data.battleId;
               this.playerRole = data.playerRole;
               if (this.onMatchFound) this.onMatchFound(data);
-              try { this.socket.close(); } catch (e) {}
+              try { this.socket.close(); } catch (e) { }
               this.connectToBattle(this.battleId, this.playerRole, pCards);
             }
           } catch (err) {
@@ -180,7 +180,7 @@ export class BattleEngine {
 
   connectToBattle(battleId, role, pCards = []) {
     if (this.socket) {
-      try { this.socket.close(); } catch (e) {}
+      try { this.socket.close(); } catch (e) { }
     }
     try {
       const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -219,7 +219,7 @@ export class BattleEngine {
     } catch (err) {
       console.warn("WebSocket battle connection error:", err);
     }
-  }
+
 
     this.addLog("BATTLE INITIALIZED: Player vs Bot AI!");
     if (this.getPlayerActive() && this.getBotActive()) {
@@ -486,12 +486,13 @@ export class BattleEngine {
       x: this.playerActiveRel.x, y: this.playerActiveRel.y,
       progress: 0,
       color: "#00f2ff",
-      onComplete: () => {
-        const result = damagePoints({
+      onComplete: async () => {
+        const result = await damagePoints({
           attacker: attacker.element,
           defender: defender.element,
           traits: this.traits,
-          attackerLevel: attacker.level || 1
+          attackerLevel: attacker.level || 1,
+          attackCount: attacker.attackCount
         });
 
         const damage = Math.max(1, result.finalDamage);
@@ -569,13 +570,14 @@ export class BattleEngine {
       progress: 0,
       color: "#ff00ff",
       skill: true,
-      onComplete: () => {
-        const result = damagePoints({
+      onComplete: async () => {
+        const result = await damagePoints({
           attacker: attacker.element,
           defender: defender.element,
           traits: this.traits,
           attackerLevel: attacker.level || 1,
-          attackCount: attacker.attackCount
+          attackCount: attacker.attackCount,
+          isSkill: true
         });
 
         const damage = Math.max(1, Math.floor(result.finalDamage * 1.2));
@@ -690,12 +692,13 @@ export class BattleEngine {
           x: this.botActiveRel.x, y: this.botActiveRel.y,
           progress: 0,
           color: "#ff3300",
-          onComplete: () => {
-            const result = damagePoints({
+          onComplete: async () => {
+            const result = await damagePoints({
               attacker: botActive.element,
               defender: playerActive.element,
               traits: this.traits,
-              attackerLevel: botActive.level || 1
+              attackerLevel: botActive.level || 1,
+              attackCount: botActive.attackCount
             });
 
             const damage = Math.max(1, result.finalDamage);

@@ -55,6 +55,7 @@ pub fn hp_computation(level: u8, hp: u16) -> f64 {
     (base_hp + (lvl * 5.0)).round()
 }
 
+// TODO: This is for the attack computation
 pub fn calculate_damage(
     attacker: &Element,
     defender: &Element,
