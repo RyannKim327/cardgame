@@ -708,6 +708,18 @@ input:focus {
     letter-spacing: 1px;
 }
 
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn-hud.active {
+    background: rgba(0, 242, 255, 0.25);
+    border-color: #00f2ff;
+    color: #00f2ff;
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
+}
+
 
 
 
