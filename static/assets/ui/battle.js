@@ -1,6 +1,6 @@
 import { BattleEngine } from "../process/battleEngine.js";
 import { hideLobby, showLobby } from "./lobby.js";
-import { hpComputation, attackComputation } from "../utils.js";
+import { hpComputation } from "../utils.js";
 
 let battleEngine = null;
 let selectedPlayerElements = [];
@@ -294,7 +294,7 @@ function renderDeckSelectionGrid(elements, state) {
 
     const level = userCardObj && typeof userCardObj === "object" && userCardObj.level ? userCardObj.level : (el.level || 1);
     const calculatedHp = hpComputation(level, Number(el.hp));
-    const maxDamage = attackComputation(level, el.reactivity, el.reactivity, el.hp).maxDamage;
+    const maxDamage = Math.floor((Number(el.reactivity) * (Number(el.hp) / 10)) + (level * 5));
 
     const elWithLevel = { ...el, level: level };
 

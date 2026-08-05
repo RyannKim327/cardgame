@@ -1,8 +1,11 @@
 mod interface;
+mod data;
 mod endpoints;
 mod utils;
 
+
 use endpoints::{
+    battle_computation::battle_computation,
     battle_ws::{ws_battle_handler, ws_battle_handler_id, ws_search_handler},
     elements::elements,
     login::login,
@@ -25,6 +28,8 @@ async fn main(){
         .route("/traits", get(traits))
         .route("/users", get(users))
         .route("/login", post(login))
+        .route("/battle_computation", post(battle_computation))
+        .route("/battle/compute", post(battle_computation))
         .route("/ws/search", get(ws_search_handler))
         .route("/ws/battle", get(ws_battle_handler))
         .route("/ws/battle/{id}", get(ws_battle_handler_id))
@@ -48,8 +53,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_traits_deserialization() {
-        let file = fs::read_to_string("data/traits.json").await.unwrap();
-        let traits: interface::Traits = serde_json::from_str(&file).unwrap();
+        let traits = data::traits::traits_data().await;
         assert!(traits.contains_key("oxidizer"));
         let oxidizer = &traits["oxidizer"];
         assert!(oxidizer.strong_against.contains(&"reducer".to_string()));
@@ -58,8 +62,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_elements_deserialization() {
-        let file = fs::read_to_string("data/elements.json").await.unwrap();
-        let elements: Vec<interface::Element> = serde_json::from_str(&file).unwrap();
+        let elements = data::elements::elements_data().await;
         assert!(!elements.is_empty());
     }
 

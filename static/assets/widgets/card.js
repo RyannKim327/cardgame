@@ -1,4 +1,4 @@
-import { hpComputation, attackComputation } from "../utils.js";
+import { hpComputation } from "../utils.js";
 
 const rarityConfig = {
   abundant: { color: "#b0b0b0", secondary: "#808080", text: "#ffffff", animated: false, radius: 5 },

@@ -6,7 +6,6 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use tokio::fs;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use crate::interface::{Element, Traits};
 
@@ -542,20 +541,9 @@ pub async fn handle_ws_battle(path_battle_id: Option<String>, req: Request) -> R
         let mut battle_state: Option<BattleState> = None;
         let mut current_pvp_room_id: Option<String> = None;
         let mut player_role: String = "player".to_string();
-        let mut traits_data: Traits = HashMap::new();
-        let mut all_elements: Vec<Element> = Vec::new();
+        let traits_data: Traits = crate::data::traits::traits_data().await;
+        let all_elements: Vec<Element> = crate::data::elements::elements_data().await;
         let mut rng = Rng::new();
-
-        if let Ok(content) = fs::read_to_string("data/traits.json").await {
-            if let Ok(parsed) = serde_json::from_str::<Traits>(&content) {
-                traits_data = parsed;
-            }
-        }
-        if let Ok(content) = fs::read_to_string("data/elements.json").await {
-            if let Ok(parsed) = serde_json::from_str::<Vec<Element>>(&content) {
-                all_elements = parsed;
-            }
-        }
 
         loop {
             tokio::select! {

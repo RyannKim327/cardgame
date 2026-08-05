@@ -61,3 +61,32 @@ pub struct LoginResponse {
     pub error: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BattleComputationPayload {
+    pub attacker: Element,
+    pub defender: Element,
+    #[serde(default = "default_level")]
+    pub attacker_level: u8,
+    #[serde(default)]
+    pub attack_count: u32,
+    #[serde(default)]
+    pub is_skill: bool,
+}
+
+fn default_level() -> u8 {
+    1
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BattleComputationResponse {
+    pub raw_damage: u32,
+    pub max_damage: u32,
+    pub final_damage: u32,
+    pub is_weak: bool,
+    pub is_strong: bool,
+    pub is_crit: bool,
+    pub is_3rd_attack: bool,
+}
+
+
