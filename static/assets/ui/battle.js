@@ -32,6 +32,28 @@ export function initBattleField(ctx, canvas, state) {
 
   let autoReplayTimeout = null;
 
+  const btnModeAi = document.getElementById("btn-mode-ai");
+  const btnModeHuman = document.getElementById("btn-mode-human");
+  const matchmakingOverlay = document.getElementById("matchmaking-overlay");
+  const btnCancelMatchmaking = document.getElementById("btn-cancel-matchmaking");
+  const btnFallbackAi = document.getElementById("btn-fallback-ai");
+
+  let currentMode = "vs_ai";
+
+  if (btnModeAi && btnModeHuman) {
+    btnModeAi.addEventListener("click", () => {
+      currentMode = "vs_ai";
+      btnModeAi.classList.add("active");
+      btnModeHuman.classList.remove("active");
+    });
+
+    btnModeHuman.addEventListener("click", () => {
+      currentMode = "vs_human";
+      btnModeHuman.classList.add("active");
+      btnModeAi.classList.remove("active");
+    });
+  }
+
   // Battle Engine Event Hooks
   battleEngine.onLog = (msg) => {
     const logElem = document.getElementById("battle-log-msg");
@@ -42,6 +64,47 @@ export function initBattleField(ctx, canvas, state) {
     updateHUD();
   };
 
+  battleEngine.onSearching = (msg) => {
+    if (matchmakingOverlay) {
+      matchmakingOverlay.classList.remove("hidden");
+      const statusTxt = document.getElementById("matchmaking-status-text");
+      if (statusTxt) statusTxt.textContent = msg || "Searching for random human opponent...";
+    }
+  };
+
+  battleEngine.onMatchFound = (data) => {
+    if (matchmakingOverlay) matchmakingOverlay.classList.add("hidden");
+    deckSelectView.classList.add("hidden");
+    battleView.classList.remove("hidden");
+    state.view = "battle";
+    updateHUD();
+  };
+
+  if (btnCancelMatchmaking) {
+    btnCancelMatchmaking.addEventListener("click", () => {
+      battleEngine.cancelMatchmaking();
+      if (matchmakingOverlay) matchmakingOverlay.classList.add("hidden");
+    });
+  }
+
+  if (btnFallbackAi) {
+    btnFallbackAi.addEventListener("click", () => {
+      battleEngine.cancelMatchmaking();
+      if (matchmakingOverlay) matchmakingOverlay.classList.add("hidden");
+      currentMode = "vs_ai";
+      if (btnModeAi) {
+        btnModeAi.classList.add("active");
+        if (btnModeHuman) btnModeHuman.classList.remove("active");
+      }
+      battleEngine.setMode("vs_ai");
+      state.view = "battle";
+      deckSelectView.classList.add("hidden");
+      battleView.classList.remove("hidden");
+      battleEngine.init(selectedPlayerElements, state.traits || {}, state.elements);
+      updateHUD();
+    });
+  }
+
   // Open Deck Selection when clicking "Battle" in lobby
   btnBattle.addEventListener("click", () => {
     state.view = "deck_select";
@@ -50,6 +113,7 @@ export function initBattleField(ctx, canvas, state) {
     battleView.classList.add("hidden");
     resultOverlay.classList.add("hidden");
     switchOverlay.classList.add("hidden");
+    if (matchmakingOverlay) matchmakingOverlay.classList.add("hidden");
 
     selectedPlayerElements = [];
     renderDeckSelectionGrid(state.elements, state);
@@ -70,6 +134,7 @@ export function initBattleField(ctx, canvas, state) {
       }
       if (selectedPlayerElements.length === 3) {
         lastUsedDeckIds = selectedPlayerElements.map((el) => el.id);
+        battleEngine.setMode("vs_ai");
         state.view = "battle";
         deckSelectView.classList.add("hidden");
         battleView.classList.remove("hidden");
@@ -86,12 +151,19 @@ export function initBattleField(ctx, canvas, state) {
     if (selectedPlayerElements.length !== 3) return;
 
     lastUsedDeckIds = selectedPlayerElements.map((el) => el.id);
-    state.view = "battle";
-    deckSelectView.classList.add("hidden");
-    battleView.classList.remove("hidden");
+    battleEngine.setMode(currentMode);
 
-    battleEngine.init(selectedPlayerElements, state.traits || {}, state.elements);
-    updateHUD();
+    if (currentMode === "vs_human") {
+      if (matchmakingOverlay) matchmakingOverlay.classList.remove("hidden");
+      battleEngine.init(selectedPlayerElements, state.traits || {}, state.elements);
+    } else {
+      state.view = "battle";
+      deckSelectView.classList.add("hidden");
+      battleView.classList.remove("hidden");
+
+      battleEngine.init(selectedPlayerElements, state.traits || {}, state.elements);
+      updateHUD();
+    }
   });
 
   // Auto Pilot Toggle Button in Battle Action Bar

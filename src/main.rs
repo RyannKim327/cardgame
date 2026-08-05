@@ -1,7 +1,9 @@
 mod interface;
 mod endpoints;
+mod utils;
 
 use endpoints::{
+    battle_ws::{ws_battle_handler, ws_battle_handler_id, ws_search_handler},
     elements::elements,
     login::login,
     traits::traits,
@@ -13,20 +15,24 @@ use axum::{
     Router,
 };
 
+use std::net::SocketAddr;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
-
 async fn main(){
     let app = Router::new()
         .route("/elements", get(elements))
         .route("/traits", get(traits))
         .route("/users", get(users))
         .route("/login", post(login))
+        .route("/ws/search", get(ws_search_handler))
+        .route("/ws/battle", get(ws_battle_handler))
+        .route("/ws/battle/{id}", get(ws_battle_handler_id))
         .fallback_service(ServeDir::new("static"));
     
+    let addr = SocketAddr::from(([127,0,0,1], 3000));
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+    let listener = tokio::net::TcpListener::bind(addr)
     .await
     .unwrap();
 
@@ -39,8 +45,6 @@ mod tests {
     use super::*;
     use axum::Json;
     use tokio::fs;
-
-
 
     #[tokio::test]
     async fn test_traits_deserialization() {

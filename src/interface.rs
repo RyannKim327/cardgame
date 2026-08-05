@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Element {
     pub id: String,
     pub name: String,
@@ -12,9 +12,11 @@ pub struct Element {
     pub stability: u8,
     pub hp: u16,
     pub traits: Vec<String>,
+    #[serde(default)]
+    pub level: u8,
 } 
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TraitRelation {
     pub strong_against: Vec<String>,
     pub weak_against: Vec<String>,

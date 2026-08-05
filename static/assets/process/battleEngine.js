@@ -29,9 +29,29 @@ export class BattleEngine {
     this.dissolveParticles = [];
     this.logMessages = [];
 
+    // WebSocket connection
+    this.socket = null;
+
     // UI Callback hooks
     this.onStateChange = null;
     this.onLog = null;
+    this.onSearching = null;
+    this.onMatchFound = null;
+
+    this.mode = "vs_ai";
+    this.playerRole = "player";
+  }
+
+  setMode(mode) {
+    this.mode = mode || "vs_ai";
+  }
+
+  cancelMatchmaking() {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      try {
+        this.socket.send(JSON.stringify({ type: "cancel_queue" }));
+      } catch (e) {}
+    }
   }
 
   init(playerSelectedElements, traits, allElements = []) {
@@ -98,14 +118,114 @@ export class BattleEngine {
     this.turn = "player";
     this.isBusy = false;
     this.battleState = "active";
+    this.battleId = `btl_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`;
     this.floatingTexts = [];
     this.projectiles = [];
     this.dissolveParticles = [];
     this.logMessages = [];
 
+    this.mode = this.mode || "vs_ai";
+    this.username = window.currentUser ? window.currentUser.username : "OPERATOR";
+
+    this.mode = this.mode || "vs_ai";
+    this.username = window.currentUser ? window.currentUser.username : "OPERATOR";
+
+    if (this.socket) {
+      try { this.socket.close(); } catch (e) {}
+    }
+
+    if (this.mode === "vs_human") {
+      try {
+        const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const searchUrl = `${wsProtocol}//${window.location.host}/ws/search`;
+        this.socket = new WebSocket(searchUrl);
+
+        this.socket.onopen = () => {
+          this.addLog(`🔍 Searching for opponent via /ws/search...`);
+          this.socket.send(JSON.stringify({
+            type: "init",
+            mode: "vs_human",
+            username: this.username,
+            playerSelectedElements: pCards
+          }));
+        };
+
+        this.socket.onmessage = (evt) => {
+          try {
+            const data = JSON.parse(evt.data);
+            if (data.type === "searching") {
+              if (this.onSearching) this.onSearching(data.message);
+            } else if (data.type === "match_found") {
+              this.battleId = data.battleId;
+              this.playerRole = data.playerRole;
+              if (this.onMatchFound) this.onMatchFound(data);
+              try { this.socket.close(); } catch (e) {}
+              this.connectToBattle(this.battleId, this.playerRole, pCards);
+            }
+          } catch (err) {
+            console.error("WS search parse error:", err);
+          }
+        };
+
+        this.socket.onerror = (err) => {
+          console.warn("WS search error:", err);
+        };
+      } catch (err) {
+        console.warn("WebSocket search error:", err);
+      }
+    } else {
+      this.connectToBattle(this.battleId, "player", pCards);
+    }
+  }
+
+  connectToBattle(battleId, role, pCards = []) {
+    if (this.socket) {
+      try { this.socket.close(); } catch (e) {}
+    }
+    try {
+      const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${wsProtocol}//${window.location.host}/ws/battle/${battleId}`;
+      this.socket = new WebSocket(wsUrl);
+
+      this.socket.onopen = () => {
+        this.addLog(`⚡ Connected to WebSocket Battle Server [/ws/battle/${battleId}]!`);
+        this.socket.send(JSON.stringify({
+          type: "init",
+          battleId: battleId,
+          mode: this.mode,
+          username: this.username,
+          playerRole: role,
+          playerSelectedElements: pCards
+        }));
+      };
+
+      this.socket.onmessage = (evt) => {
+        try {
+          const data = JSON.parse(evt.data);
+          if (data.type === "state_sync") {
+            if (data.playerRole) this.playerRole = data.playerRole;
+            this.syncState(data.state);
+          } else if (data.type === "action_event") {
+            this.handleActionEvent(data);
+          }
+        } catch (err) {
+          console.error("WS battle parse error:", err);
+        }
+      };
+
+      this.socket.onerror = (err) => {
+        console.warn("WS battle error:", err);
+      };
+    } catch (err) {
+      console.warn("WebSocket battle connection error:", err);
+    }
+  }
+
     this.addLog("BATTLE INITIALIZED: Player vs Bot AI!");
-    this.addLog(`Player active: ${this.getPlayerActive().element.name} (Lv.${this.getPlayerActive().level})`);
-    this.addLog(`Bot active: ${this.getBotActive().element.name} (Lv.${this.getBotActive().level})`);
+    if (this.getPlayerActive() && this.getBotActive()) {
+      this.addLog(`Player active: ${this.getPlayerActive().element.name} (Lv.${this.getPlayerActive().level})`);
+      this.addLog(`Bot active: ${this.getBotActive().element.name} (Lv.${this.getBotActive().level})`);
+    }
 
     if (this.isAutoPilot) {
       this.addLog("🤖 AUTOPILOT: Active and preparing initial turn...");
@@ -113,6 +233,98 @@ export class BattleEngine {
     }
 
     if (this.onStateChange) this.onStateChange();
+  }
+
+  syncState(state) {
+    if (!state) return;
+    if (Array.isArray(state.playerDeck)) {
+      this.playerDeck = state.playerDeck.map((c, idx) => ({
+        ...c,
+        currentHp: Number(c.currentHp),
+        maxHp: Number(c.maxHp),
+        level: Number(c.level),
+        attackCount: Number(c.attackCount || 0),
+        shake: c.shake || 0,
+        dissolveProgress: c.dissolveProgress || 0,
+        isDissolving: c.isDissolving || false,
+        benchBounds: (this.playerDeck && this.playerDeck[idx]) ? this.playerDeck[idx].benchBounds : null
+      }));
+    }
+    if (Array.isArray(state.botDeck)) {
+      this.botDeck = state.botDeck.map(c => ({
+        ...c,
+        currentHp: Number(c.currentHp),
+        maxHp: Number(c.maxHp),
+        level: Number(c.level),
+        attackCount: Number(c.attackCount || 0),
+        shake: c.shake || 0,
+        dissolveProgress: c.dissolveProgress || 0,
+        isDissolving: c.isDissolving || false,
+      }));
+    }
+    if (typeof state.playerActiveIndex === "number") this.playerActiveIndex = state.playerActiveIndex;
+    if (typeof state.botActiveIndex === "number") this.botActiveIndex = state.botActiveIndex;
+    if (state.turn) this.turn = state.turn;
+    if (state.battleState) this.battleState = state.battleState;
+    if (typeof state.isAutoPilot === "boolean") this.isAutoPilot = state.isAutoPilot;
+    if (Array.isArray(state.logs) && state.logs.length > 0) {
+      this.logMessages = state.logs;
+      if (this.onLog && state.logs[0]) this.onLog(state.logs[0]);
+    }
+    if (this.onStateChange) this.onStateChange();
+  }
+
+  handleActionEvent(data) {
+    const state = data.state;
+    const damage = data.damage || 0;
+    const isCrit = data.isCrit;
+    const isWeak = data.isWeak;
+    const isStrong = data.isStrong;
+
+    if (data.action === "player_attack" || data.action === "player_skill") {
+      const isSkill = data.action === "player_skill";
+      this.isBusy = true;
+
+      this.projectiles.push({
+        startX: this.playerActiveRel.x, startY: this.playerActiveRel.y,
+        targetX: this.botActiveRel.x, targetY: this.botActiveRel.y,
+        x: this.playerActiveRel.x, y: this.playerActiveRel.y,
+        progress: 0,
+        color: isSkill ? "#ff00ff" : "#00f2ff",
+        skill: isSkill,
+        onComplete: () => {
+          let txt = `-${damage}`;
+          let textColor = isSkill ? "#ff00ff" : "#00f2ff";
+          if (isCrit && isWeak) {
+            txt = `⚡ CRIT (WEAK) -${damage}`;
+            textColor = "#ffaa00";
+          } else if (isCrit) {
+            txt = `⚡ CRITICAL HIT -${damage}`;
+            textColor = "#ff00ff";
+          } else if (isWeak) {
+            txt = `🛡️ WEAK -${damage}`;
+            textColor = "#88aaff";
+          } else if (isStrong) {
+            txt = `💥 STRONG -${damage}`;
+            textColor = "#ffaa00";
+          }
+
+          this.addFloatingText(this.botActiveRel.x, this.botActiveRel.y, txt, textColor);
+          this.syncState(state);
+          this.isBusy = false;
+
+          if (this.isAutoPilot && (this.turn === "player" || this.battleState === "selecting_replacement")) {
+            this.scheduleAutoPilotAction(800);
+          }
+        }
+      });
+    } else {
+      this.syncState(state);
+      this.isBusy = false;
+      if (this.isAutoPilot && (this.turn === "player" || this.battleState === "selecting_replacement")) {
+        this.scheduleAutoPilotAction(800);
+      }
+    }
   }
 
   getPlayerActive() {
@@ -133,6 +345,10 @@ export class BattleEngine {
 
   toggleAutoPilot(enabled = null) {
     this.isAutoPilot = enabled !== null ? enabled : !this.isAutoPilot;
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify({ type: "autopilot", enabled: this.isAutoPilot }));
+    }
+
     if (this.isAutoPilot) {
       this.addLog("🤖 AUTOPILOT: ENGAGED - Tactical AI active!");
       if (this.turn === "player" || this.battleState === "selecting_replacement") {
@@ -252,6 +468,12 @@ export class BattleEngine {
       this.autoPilotTimer = null;
     }
 
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.isBusy = true;
+      this.socket.send(JSON.stringify({ type: "attack" }));
+      return;
+    }
+
     this.isBusy = true;
     const attacker = this.getPlayerActive();
     const defender = this.getBotActive();
@@ -324,6 +546,12 @@ export class BattleEngine {
       this.autoPilotTimer = null;
     }
 
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.isBusy = true;
+      this.socket.send(JSON.stringify({ type: "skill" }));
+      return;
+    }
+
     this.isBusy = true;
     const attacker = this.getPlayerActive();
     const defender = this.getBotActive();
@@ -379,6 +607,12 @@ export class BattleEngine {
 
     const targetCard = this.playerDeck[targetIndex];
     if (!targetCard || targetCard.currentHp <= 0 || targetIndex === this.playerActiveIndex) {
+      return;
+    }
+
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.isBusy = true;
+      this.socket.send(JSON.stringify({ type: "switch", targetIndex: targetIndex }));
       return;
     }
 
