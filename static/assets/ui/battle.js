@@ -5,6 +5,7 @@ import { hpComputation } from "../utils.js";
 let battleEngine = null;
 let selectedPlayerElements = [];
 let lastUsedDeckIds = [];
+let autopilotCountdownInterval = null;
 
 export function initBattleField(ctx, canvas, state) {
   battleEngine = new BattleEngine();
@@ -299,13 +300,42 @@ function renderDeckSelectionGrid(elements, state) {
     const elWithLevel = { ...el, level: level };
 
     const cardOpt = document.createElement("div");
-    cardOpt.className = `deck-card-option ${isSelected ? "selected" : ""} ${!isOwned ? "disabled unowned" : ""}`;
+    const rarityClass = el.rarity ? `rarity-${el.rarity}` : "";
+    cardOpt.className = `deck-card-option ${rarityClass} ${isSelected ? "selected" : ""} ${!isOwned ? "disabled unowned" : ""}`;
     cardOpt.innerHTML = `
       <div class="opt-id">${el.id}</div>
       <div class="opt-name">${el.name} <span style="color:#ffaa00; font-size:0.75rem;">Lv.${level}</span></div>
       <div class="opt-stats">HP ${calculatedHp} | ATK 1-${maxDamage}</div>
       <div class="opt-ownership">${isOwned ? "OWNED" : "🔒 LOCKED"}</div>
     `;
+    // raising flame particles for scarce — heavier aura (bottom→top)
+    if (el.rarity === "scarce") {
+      const rising = document.createElement("div");
+      rising.className = "rising-flames";
+      for (let i = 0; i < 6; i++) {
+        const f = document.createElement("div");
+        f.className = "flame";
+        f.style.left = (9 + i * 14) + "%";
+        f.style.animationDelay = (i * 0.22) + "s";
+        f.style.animationDuration = (1.25 + (i % 3) * 0.18) + "s";
+        rising.appendChild(f);
+      }
+      cardOpt.appendChild(rising);
+    }
+    // corner frames for moderate — similar to synthetic but only corners
+    if (el.rarity === "moderate") {
+      ["tl","tr","bl","br"].forEach(pos => {
+        const cf = document.createElement("div");
+        cf.className = `corner-frame corner-${pos}`;
+        cardOpt.appendChild(cf);
+      });
+    }
+    // horizontal lightning for very_scarce
+    if (el.rarity === "very_scarce") {
+      const lightning = document.createElement("div");
+      lightning.className = "lightning";
+      cardOpt.appendChild(lightning);
+    }
 
     if (isOwned) {
       cardOpt.addEventListener("click", () => {
@@ -381,6 +411,12 @@ function updateHUD() {
   // Close switch overlay if battle is active and not selecting replacement
   if (battleEngine.battleState === "active") {
     switchOverlay.classList.add("hidden");
+    if (autopilotCountdownInterval) {
+      clearInterval(autopilotCountdownInterval);
+      autopilotCountdownInterval = null;
+    }
+    const cd = document.getElementById("autopilot-countdown");
+    if (cd) cd.remove();
   }
 
   // Prompt replacement if forced
@@ -392,6 +428,12 @@ function updateHUD() {
   if (battleEngine.battleState === "victory" || battleEngine.battleState === "defeat") {
     resultOverlay.classList.remove("hidden");
     switchOverlay.classList.add("hidden");
+    if (autopilotCountdownInterval) {
+      clearInterval(autopilotCountdownInterval);
+      autopilotCountdownInterval = null;
+    }
+    const cd2 = document.getElementById("autopilot-countdown");
+    if (cd2) cd2.remove();
     const resultTitle = document.getElementById("result-title");
     const resultMsg = document.getElementById("result-message");
 
@@ -442,6 +484,14 @@ function openSwitchModal() {
 
   const isSelectingReplacement = battleEngine.battleState === "selecting_replacement";
 
+  // Clear any previous autopilot countdown
+  if (autopilotCountdownInterval) {
+    clearInterval(autopilotCountdownInterval);
+    autopilotCountdownInterval = null;
+  }
+  const existingCountdown = document.getElementById("autopilot-countdown");
+  if (existingCountdown) existingCountdown.remove();
+
   battleEngine.playerDeck.forEach((card, idx) => {
     const isCurrentActive = idx === battleEngine.playerActiveIndex && card.status === "active";
     const isDefeated = card.status === "defeated" || card.currentHp <= 0;
@@ -456,6 +506,12 @@ function openSwitchModal() {
 
     if (!isDefeated && !isCurrentActive) {
       item.addEventListener("click", () => {
+        if (autopilotCountdownInterval) {
+          clearInterval(autopilotCountdownInterval);
+          autopilotCountdownInterval = null;
+        }
+        const cd = document.getElementById("autopilot-countdown");
+        if (cd) cd.remove();
         battleEngine.playerSwitchCard(idx);
         switchOverlay.classList.add("hidden");
       });
@@ -469,6 +525,40 @@ function openSwitchModal() {
     btnCloseSwitch.style.display = isSelectingReplacement ? "none" : "inline-block";
   }
 
+  // Show 5s autopilot countdown so player can manually choose before auto-select
+  if (isSelectingReplacement && battleEngine.isAutoPilot) {
+    const panel = switchOverlay.querySelector(".switch-panel");
+    const countdownEl = document.createElement("div");
+    countdownEl.id = "autopilot-countdown";
+    countdownEl.style.cssText = "margin: 12px 0; padding: 10px; background: rgba(0,242,255,0.12); border: 1px solid #00f2ff; border-radius: 6px; color: #00f2ff; font-weight: bold; font-size: 0.95rem; text-align: center;";
+    let remaining = 5;
+    countdownEl.textContent = `🤖 AUTOPILOT: Auto-selecting in ${remaining}s — choose a card to override`;
+    if (panel) panel.insertBefore(countdownEl, container);
+
+    autopilotCountdownInterval = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        countdownEl.textContent = `🤖 AUTOPILOT: Auto-selecting now...`;
+        clearInterval(autopilotCountdownInterval);
+        autopilotCountdownInterval = null;
+      } else {
+        countdownEl.textContent = `🤖 AUTOPILOT: Auto-selecting in ${remaining}s — choose a card to override`;
+      }
+    }, 1000);
+
+    // Also clear countdown if overlay is hidden (player manually selected or battle state changed)
+    const observer = new MutationObserver(() => {
+      if (switchOverlay.classList.contains("hidden")) {
+        if (autopilotCountdownInterval) {
+          clearInterval(autopilotCountdownInterval);
+          autopilotCountdownInterval = null;
+        }
+        observer.disconnect();
+      }
+    });
+    observer.observe(switchOverlay, { attributes: true, attributeFilter: ["class"] });
+  }
+
   switchOverlay.classList.remove("hidden");
 }
 
@@ -479,6 +569,12 @@ function exitBattle(state) {
   document.getElementById("battle-view").classList.add("hidden");
   document.getElementById("battle-result-overlay").classList.add("hidden");
   document.getElementById("switch-modal-overlay").classList.add("hidden");
+  if (autopilotCountdownInterval) {
+    clearInterval(autopilotCountdownInterval);
+    autopilotCountdownInterval = null;
+  }
+  const cd = document.getElementById("autopilot-countdown");
+  if (cd) cd.remove();
   showLobby(state.currentUser || { username: "Guest" });
 }
 

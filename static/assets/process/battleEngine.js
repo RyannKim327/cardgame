@@ -2,6 +2,240 @@ import { hpComputation } from "../utils.js";
 import card from "../widgets/card.js";
 import { damagePoints } from "./score.js";
 
+// --- Trait-driven projectile mapping ---
+function getTraitEffect(element) {
+  if (!element) return "energy";
+  const traits = (element.traits || []).map(t => String(t).toLowerCase());
+  const type = String(element.type || "").toLowerCase();
+  const has = (...list) => list.some(v => traits.includes(v));
+
+  // oxidizer -> water / moist (user request)
+  if (has("oxidizer", "super_oxidizer", "oxidizer_like", "strong_oxidizer")) return "water";
+  // fuel / hot -> fire
+  if (has("fuel", "highly_reactive", "explosive_reducer", "high_electronegativity") || (element.reactivity >= 9 && has("reducer"))) return "fire";
+  // halogen / toxic / unstable -> poison cloud
+  if (has("halogen", "toxic", "radioactive", "unstable", "volatile", "inert_breaking", "quantum_instability")) return "poison";
+  // metal family -> metallic disc (same circle shape but metallic)
+  if (has("metal", "alkali_metal", "transition_metal", "noble_metal", "post_transition", "lanthanide", "actinide", "alloy_former", "transition_bridge", "reactive_earth_metal", "alkali", "liquid", "soft_metal") || type === "metal") return "metal";
+  // inert / noble -> wind / air
+  if (has("inert", "noble_gas", "inert_like", "stable_gas", "stable", "stable_binder", "stable_bond", "noble_like") || type === "noble_gas") return "wind";
+  // semiconductor / conductive -> electric
+  if (has("semiconductor", "covalent_former", "conductive", "magnetic", "catalyst", "semiconductor_like", "phosphorescent", "luminescent", "optical", "extreme_durability")) return "electric";
+  // metalloid -> electric as well
+  if (type === "metalloid") return "electric";
+  // fallback by reactivity
+  if ((element.reactivity || 0) >= 8) return "fire";
+  if ((element.reactivity || 0) <= 1) return "wind";
+  return "energy";
+}
+
+function getProjectileVisual(element, isSkill = false) {
+  const effect = getTraitEffect(element);
+  const base = {
+    water:   { effect: "water",   color: "#00bfff", glow: "rgba(0,180,255,0.9)",  secondary: "#e0f7ff", size: isSkill ? 13 : 8 },
+    metal:   { effect: "metal",   color: "#c8cdd2", glow: "rgba(210,220,230,0.95)", secondary: "#ffffff", size: isSkill ? 12 : 7.5 },
+    fire:    { effect: "fire",    color: "#ff4500", glow: "rgba(255,100,0,0.95)", secondary: "#ffcc33", size: isSkill ? 14 : 9 },
+    poison:  { effect: "poison",  color: "#7ed321", glow: "rgba(120,220,60,0.9)", secondary: "#e040fb", size: isSkill ? 13 : 8.5 },
+    wind:    { effect: "wind",    color: "#e1f5fe", glow: "rgba(180,240,255,0.9)", secondary: "#ffffff", size: isSkill ? 11 : 7 },
+    electric:{ effect: "electric",color: "#ffeb3b", glow: "rgba(255,235,59,0.95)", secondary: "#fff9c4", size: isSkill ? 12 : 7 },
+    energy:  { effect: "energy",  color: isSkill ? "#ff00ff" : "#00f2ff", glow: isSkill ? "rgba(255,0,255,0.85)" : "rgba(0,242,255,0.85)", secondary: "#ffffff", size: isSkill ? 12 : 7 }
+  };
+  return base[effect] || base.energy;
+}
+
+// --- Visual draw helpers for each trait projectile ---
+function drawWaterProjectile(ctx, x, y, size, time, isSkill) {
+  ctx.save();
+  ctx.shadowBlur = 18;
+  ctx.shadowColor = "rgba(0,180,255,0.85)";
+  // droplet shape (teardrop pointing toward target) + moist tail
+  const angle = 0; // will be rotated externally if needed
+  const tail = size * 1.6;
+  // core droplet
+  const grad = ctx.createRadialGradient(x - size*0.2, y - size*0.2, size*0.2, x, y, size);
+  grad.addColorStop(0, "#ffffff");
+  grad.addColorStop(0.35, "#7de2ff");
+  grad.addColorStop(1, "#0090cc");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(x, y - size*1.1);
+  ctx.bezierCurveTo(x + size*0.9, y - size*0.4, x + size*0.85, y + size*0.6, x, y + size*0.95);
+  ctx.bezierCurveTo(x - size*0.85, y + size*0.6, x - size*0.9, y - size*0.4, x, y - size*1.1);
+  ctx.closePath();
+  ctx.fill();
+  // moist bubble tail droplets
+  ctx.fillStyle = "rgba(180,235,255,0.75)";
+  for (let i=0;i<3;i++){
+    const t = 0.3 + i*0.22;
+    const bx = x - Math.cos(time*6+i)*2;
+    const by = y + size*0.6 + i*size*0.55;
+    const r = size*0.28*(1 - i*0.18);
+    ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI*2); ctx.fill();
+  }
+  if(isSkill){
+    ctx.strokeStyle="rgba(255,255,255,0.9)"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(x, y, size*0.45,0,Math.PI*2); ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawMetalProjectile(ctx, x, y, size, time, isSkill){
+  ctx.save();
+  // same circle shape but metallic look (user: same circle like but still different looking)
+  ctx.shadowBlur = 16;
+  ctx.shadowColor = "rgba(210,220,230,0.9)";
+  const grad = ctx.createRadialGradient(x - size*0.35, y - size*0.35, size*0.15, x, y, size);
+  grad.addColorStop(0, "#ffffff");
+  grad.addColorStop(0.25, "#e8eef3");
+  grad.addColorStop(0.55, "#aab4be");
+  grad.addColorStop(0.8, "#6f7a85");
+  grad.addColorStop(1, "#3a4148");
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2); ctx.fill();
+  // bevel edge
+  ctx.strokeStyle = "rgba(255,255,255,0.95)"; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2); ctx.stroke();
+  // inner highlight ring + cross sheen
+  ctx.strokeStyle = "rgba(255,255,255,0.65)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x,y,size*0.55,0,Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = "rgba(255,255,255,0.85)"; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(x-size*0.55,y); ctx.lineTo(x+size*0.55,y); ctx.moveTo(x,y-size*0.55); ctx.lineTo(x,y+size*0.55); ctx.stroke();
+  // sparkle points
+  const spark = Math.sin(time*12)>0.6;
+  if(spark || isSkill){
+    ctx.fillStyle="#fff"; ctx.shadowBlur=6; ctx.shadowColor="#fff";
+    ctx.beginPath(); ctx.arc(x+size*0.42,y-size*0.42, isSkill?2.2:1.4,0,Math.PI*2); ctx.fill();
+  }
+  // trailing metallic sparks
+  for(let i=0;i<2;i++){
+    ctx.fillStyle=`rgba(255,240,180,${0.5 - i*0.2})`;
+    ctx.beginPath(); ctx.arc(x - i*4, y + i*1.5, 1.6 - i*0.5,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawFireProjectile(ctx, x, y, size, time, isSkill){
+  ctx.save();
+  ctx.shadowBlur = 22;
+  ctx.shadowColor = "rgba(255,80,0,0.9)";
+  const flick = Math.sin(time*18)*1.2;
+  const flick2 = Math.cos(time*14)*0.8;
+  // outer flame
+  const grad = ctx.createRadialGradient(x, y+size*0.25, size*0.2, x, y, size*1.35);
+  grad.addColorStop(0, "#ffff99");
+  grad.addColorStop(0.25, "#ffcc33");
+  grad.addColorStop(0.55, "#ff6a00");
+  grad.addColorStop(0.85, "#ff2400");
+  grad.addColorStop(1, "rgba(120,0,0,0)");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(x, y - size*1.25);
+  ctx.bezierCurveTo(x + size*0.95+flick, y - size*0.3, x + size*0.7+flick2, y + size*0.65, x, y + size*1.05);
+  ctx.bezierCurveTo(x - size*0.7-flick2, y + size*0.65, x - size*0.95-flick, y - size*0.3, x, y - size*1.25);
+  ctx.closePath(); ctx.fill();
+  // inner core
+  ctx.fillStyle = "#fffde7";
+  ctx.globalAlpha = 0.92;
+  ctx.beginPath();
+  ctx.ellipse(x, y+size*0.08, size*0.32, size*0.55, 0, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+  // ember sparks
+  for(let i=0;i<3;i++){
+    const t=(time*5+i*1.7)%1;
+    const px=x + (Math.sin(time*8+i)*3);
+    const py=y - t*size*0.9;
+    ctx.fillStyle=`rgba(255,${200 - i*30},0,${1 - t})`;
+    ctx.beginPath(); ctx.arc(px, py, 1.3,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawPoisonProjectile(ctx, x, y, size, time, isSkill){
+  ctx.save();
+  ctx.shadowBlur=16; ctx.shadowColor="rgba(130,200,60,0.85)";
+  // cloud puff shape (overlapping circles)
+  const puffGrad = ctx.createRadialGradient(x, y, size*0.3, x, y, size*1.2);
+  puffGrad.addColorStop(0, "rgba(200,255,150,0.95)");
+  puffGrad.addColorStop(0.4, "#7ed321");
+  puffGrad.addColorStop(0.75, "#4a8a08");
+  puffGrad.addColorStop(1, "rgba(60,30,90,0)");
+  ctx.fillStyle = puffGrad;
+  // draw 3 overlapping blobs for cloud silhouette (still roughly circular)
+  const wobble = Math.sin(time*7)*1.5;
+  ctx.beginPath();
+  ctx.arc(x - size*0.25, y + size*0.12 + wobble*0.3, size*0.72, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x + size*0.28, y + size*0.08 - wobble*0.3, size*0.68, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x, y - size*0.22, size*0.62, 0, Math.PI*2); ctx.fill();
+  // toxic highlight bubbles
+  ctx.fillStyle="rgba(255,255,255,0.85)"; ctx.beginPath(); ctx.arc(x - size*0.18, y - size*0.18, size*0.18,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="rgba(224,64,251,0.65)"; ctx.beginPath(); ctx.arc(x+size*0.2, y+size*0.18, size*0.14,0,Math.PI*2); ctx.fill();
+  if(isSkill){ ctx.strokeStyle="rgba(220,255,180,0.9)"; ctx.lineWidth=1.2; ctx.setLineDash([4,3]); ctx.lineDashOffset=-time*30; ctx.beginPath(); ctx.arc(x,y,size*1.1,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);}
+  ctx.restore();
+}
+function drawWindProjectile(ctx, x, y, size, time, isSkill){
+  ctx.save();
+  ctx.shadowBlur=14; ctx.shadowColor="rgba(180,240,255,0.9)";
+  // wind gust: translucent swirling rings (still circular base)
+  ctx.strokeStyle="rgba(255,255,255,0.95)"; ctx.lineWidth=1.4;
+  const swirl = Math.sin(time*9)*0.6;
+  for(let i=0;i<3;i++){
+    const r = size*(0.45 + i*0.22);
+    const aOff = time*4 + i*1.2;
+    ctx.beginPath();
+    ctx.arc(x, y, r, aOff, aOff + Math.PI*1.35);
+    ctx.stroke();
+  }
+  // core air orb
+  const grad = ctx.createRadialGradient(x - size*0.2, y - size*0.2, size*0.12, x, y, size*0.9);
+  grad.addColorStop(0, "rgba(255,255,255,1)");
+  grad.addColorStop(0.4, "rgba(210,245,255,0.95)");
+  grad.addColorStop(1, "rgba(120,210,255,0)");
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(x,y,size*0.78,0,Math.PI*2); ctx.fill();
+  // speed lines
+  ctx.strokeStyle="rgba(255,255,255,0.55)"; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x - size*1.4, y+swirl); ctx.bezierCurveTo(x - size*0.6, y-1, x + size*0.2, y+1, x+size*1.1, y); ctx.stroke();
+  ctx.restore();
+}
+function drawElectricProjectile(ctx, x, y, size, time, isSkill){
+  ctx.save();
+  ctx.shadowBlur=20; ctx.shadowColor="rgba(255,235,59,0.95)";
+  // electric orb core (circle)
+  const grad = ctx.createRadialGradient(x - size*0.25, y - size*0.25, size*0.15, x, y, size);
+  grad.addColorStop(0, "#ffffe0");
+  grad.addColorStop(0.3, "#ffeb3b");
+  grad.addColorStop(0.7, "#ff9800");
+  grad.addColorStop(1, "rgba(255,60,0,0)");
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2); ctx.fill();
+  // jagged lightning branches
+  ctx.strokeStyle="#fff"; ctx.lineWidth= isSkill?1.8:1.2;
+  const zig = Math.sin(time*22)*2;
+  ctx.beginPath();
+  ctx.moveTo(x - size*0.65, y + zig);
+  ctx.lineTo(x - size*0.15, y - size*0.25 - zig*0.5);
+  ctx.lineTo(x + size*0.12, y + size*0.2 + zig*0.5);
+  ctx.lineTo(x + size*0.65, y - zig);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y - size*0.65);
+  ctx.lineTo(x - size*0.18, y);
+  ctx.lineTo(x + size*0.18, y + size*0.55);
+  ctx.stroke();
+  // spark particles
+  for(let i=0;i<2;i++){
+    const a=Math.random()*Math.PI*2;
+    const r=size*0.9;
+    ctx.fillStyle="rgba(255,255,255,0.95)";
+    ctx.beginPath(); ctx.arc(x+Math.cos(a)*r, y+Math.sin(a)*r, 1.1,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawEnergyProjectile(ctx, x, y, size, color, time, isSkill){
+  ctx.save();
+  ctx.shadowBlur=15; ctx.shadowColor=color;
+  ctx.fillStyle=color;
+  ctx.beginPath(); ctx.arc(x,y, size,0,Math.PI*2); ctx.fill();
+  if(isSkill){ ctx.strokeStyle="rgba(255,255,255,0.85)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(x,y,size*0.5,0,Math.PI*2); ctx.stroke();}
+  ctx.restore();
+}
+
 // Battle Manager Instance
 export class BattleEngine {
   constructor() {
@@ -284,13 +518,29 @@ export class BattleEngine {
     if (data.action === "player_attack" || data.action === "player_skill") {
       const isSkill = data.action === "player_skill";
       this.isBusy = true;
+      const attackerEl = (() => {
+        const atk = data.attacker;
+        if (atk === "player2") return this.botDeck[this.botActiveIndex]?.element;
+        if (atk === "player1") return this.playerDeck[this.playerActiveIndex]?.element;
+        // fallback to local active
+        return (atk && atk.includes("bot")) ? this.getBotActive()?.element : this.getPlayerActive()?.element;
+      })();
+      const vis = getProjectileVisual(attackerEl || this.getPlayerActive()?.element, isSkill);
+      const isOpponentAttack = data.attacker === "player2" || data.attacker === "bot";
+      const sX = isOpponentAttack ? this.botActiveRel.x : this.playerActiveRel.x;
+      const sY = isOpponentAttack ? this.botActiveRel.y : this.playerActiveRel.y;
+      const tX = isOpponentAttack ? this.playerActiveRel.x : this.botActiveRel.x;
+      const tY = isOpponentAttack ? this.playerActiveRel.y : this.botActiveRel.y;
 
       this.projectiles.push({
-        startX: this.playerActiveRel.x, startY: this.playerActiveRel.y,
-        targetX: this.botActiveRel.x, targetY: this.botActiveRel.y,
-        x: this.playerActiveRel.x, y: this.playerActiveRel.y,
+        startX: sX, startY: sY,
+        targetX: tX, targetY: tY,
+        x: sX, y: sY,
         progress: 0,
-        color: isSkill ? "#ff00ff" : "#00f2ff",
+        color: vis.color,
+        glow: vis.glow,
+        effect: vis.effect,
+        size: vis.size,
         skill: isSkill,
         onComplete: () => {
           let txt = `-${damage}`;
@@ -309,7 +559,8 @@ export class BattleEngine {
             textColor = "#ffaa00";
           }
 
-          this.addFloatingText(this.botActiveRel.x, this.botActiveRel.y, txt, textColor);
+          const targetRel = isOpponentAttack ? this.playerActiveRel : this.botActiveRel;
+          this.addFloatingText(targetRel.x, targetRel.y, txt, textColor);
           this.syncState(state);
           this.isBusy = false;
 
@@ -374,6 +625,12 @@ export class BattleEngine {
 
     if (!this.isAutoPilot) return;
     if (this.battleState !== "active" && this.battleState !== "selecting_replacement") return;
+
+    // Give player a 5 second window to manually choose a replacement when in autopilot
+    if (this.battleState === "selecting_replacement") {
+      delay = 5000;
+      this.addLog("🤖 AUTOPILOT: Auto-selecting replacement in 5s — tap a bench card to choose manually!");
+    }
 
     this.autoPilotTimer = setTimeout(() => {
       this.executeAutoPilotAction();
@@ -479,13 +736,17 @@ export class BattleEngine {
     const defender = this.getBotActive();
 
     this.addLog(`Player's ${attacker.element.name} attacks!`);
+    const vis = getProjectileVisual(attacker.element, false);
 
     this.projectiles.push({
       startX: this.playerActiveRel.x, startY: this.playerActiveRel.y,
       targetX: this.botActiveRel.x, targetY: this.botActiveRel.y,
       x: this.playerActiveRel.x, y: this.playerActiveRel.y,
       progress: 0,
-      color: "#00f2ff",
+      color: vis.color,
+      glow: vis.glow,
+      effect: vis.effect,
+      size: vis.size,
       onComplete: async () => {
         const result = await damagePoints({
           attacker: attacker.element,
@@ -562,13 +823,17 @@ export class BattleEngine {
 
     const traitName = attacker.element.traits[0] || "elemental";
     this.addLog(`Player's ${attacker.element.name} activates ${traitName.toUpperCase()} SKILL!`);
+    const visS = getProjectileVisual(attacker.element, true);
 
     this.projectiles.push({
       startX: this.playerActiveRel.x, startY: this.playerActiveRel.y,
       targetX: this.botActiveRel.x, targetY: this.botActiveRel.y,
       x: this.playerActiveRel.x, y: this.playerActiveRel.y,
       progress: 0,
-      color: "#ff00ff",
+      color: visS.color,
+      glow: visS.glow,
+      effect: visS.effect,
+      size: visS.size,
       skill: true,
       onComplete: async () => {
         const result = await damagePoints({
@@ -685,13 +950,17 @@ export class BattleEngine {
       } else {
         // Bot Attacks
         this.addLog(`Bot's ${botActive.element.name} attacks!`);
+        const visBot = getProjectileVisual(botActive.element, false);
 
         this.projectiles.push({
           startX: this.botActiveRel.x, startY: this.botActiveRel.y,
           targetX: this.playerActiveRel.x, targetY: this.playerActiveRel.y,
           x: this.botActiveRel.x, y: this.botActiveRel.y,
           progress: 0,
-          color: "#ff3300",
+          color: visBot.color,
+          glow: visBot.glow,
+          effect: visBot.effect,
+          size: visBot.size,
           onComplete: async () => {
             const result = await damagePoints({
               attacker: botActive.element,
@@ -902,16 +1171,34 @@ export class BattleEngine {
     this.renderPlayerBench(ctx, w, h, time);
     this.renderBotBench(ctx, w, h, time);
 
-    // Projectile Animations
+    // Projectile Animations — trait-driven visuals (oxidizer→water, metal→metallic disc, hot→fire, etc)
     this.projectiles.forEach((p) => {
-      ctx.save();
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = p.color;
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x * w, p.y * h, p.skill ? 12 : 7, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      const px = p.x * w;
+      const py = p.y * h;
+      const size = p.size || (p.skill ? 12 : 7);
+      const effect = p.effect || "energy";
+      const isSkill = !!p.skill;
+      switch (effect) {
+        case "water": drawWaterProjectile(ctx, px, py, size, time, isSkill); break;
+        case "metal": drawMetalProjectile(ctx, px, py, size, time, isSkill); break;
+        case "fire": drawFireProjectile(ctx, px, py, size, time, isSkill); break;
+        case "poison": drawPoisonProjectile(ctx, px, py, size, time, isSkill); break;
+        case "wind": drawWindProjectile(ctx, px, py, size, time, isSkill); break;
+        case "electric": drawElectricProjectile(ctx, px, py, size, time, isSkill); break;
+        default: drawEnergyProjectile(ctx, px, py, size, p.color || (isSkill ? "#ff00ff" : "#00f2ff"), time, isSkill); break;
+      }
+      // faint trail line for motion (subtle circle path)
+      if (p.progress > 0.08) {
+        ctx.save();
+        ctx.globalAlpha = 0.18 * (1 - p.progress);
+        ctx.strokeStyle = p.glow || p.color || "#fff";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.startX * w, p.startY * h);
+        ctx.lineTo(px, py);
+        ctx.stroke();
+        ctx.restore();
+      }
     });
 
     // Floating Text

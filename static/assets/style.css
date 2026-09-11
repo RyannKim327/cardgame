@@ -595,6 +595,297 @@ input:focus {
     color: #ff3333;
 }
 
+/* === RARITY VISUALS for deck selection (mirror canvas card effects) === */
+.deck-card-option.rarity-synthetic {
+    border: 2px solid transparent;
+    background:
+        linear-gradient(rgba(10,20,35,0.92), rgba(10,20,35,0.92)) padding-box,
+        linear-gradient(90deg, #ff3b30, #ff6a00, #ff006a, #a000ff, #00f2ff, #ff3b30) border-box;
+    background-size: 300% 300%;
+    animation: syntheticGradientShift 2.2s linear infinite;
+    box-shadow: 0 0 14px rgba(255, 60, 120, 0.65), 0 0 28px rgba(0, 242, 255, 0.35);
+}
+@keyframes syntheticGradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.deck-card-option.rarity-synthetic::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 6px;
+    padding: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    background-size: 200% 100%;
+    animation: syntheticSheen 1.6s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.85;
+}
+@keyframes syntheticSheen {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Scarce - raising flame particles bottom→top */
+.deck-card-option.rarity-scarce {
+    border-color: #e53935;
+    box-shadow: 0 0 8px rgba(229,57,53,0.45);
+    overflow: visible;
+}
+.deck-card-option.rarity-scarce .rising-flames {
+    position: absolute;
+    inset: -4px;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 8px;
+    z-index: 3;
+}
+.deck-card-option.rarity-scarce .rising-flames::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    background: radial-gradient(ellipse at 50% 88%, rgba(255,110,0,0.22) 0%, rgba(255,90,0,0.14) 28%, transparent 68%);
+    filter: blur(4px);
+    opacity: 0.9;
+    pointer-events: none;
+}
+.deck-card-option.rarity-scarce .rising-flames .flame {
+    position: absolute;
+    bottom: -12px;
+    width: 15px;
+    height: 22px;
+    background: radial-gradient(ellipse at 50% 28%, #fffde7 0%, #fff4a0 14%, #ffeb3b 24%, #ff8c00 44%, #ff3d00 62%, #8b1a00 78%, transparent 80%);
+    border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+    filter: drop-shadow(0 0 6px #ff6a00) drop-shadow(0 0 12px rgba(255,90,0,0.75)) drop-shadow(0 2px 8px rgba(255,60,0,0.55));
+    opacity: 0;
+    animation: riseFlame 1.45s infinite linear;
+    will-change: transform, opacity;
+}
+@keyframes riseFlame {
+    0% { transform: translateY(0) scale(0.72) translateX(0); opacity: 0; }
+    10% { opacity: 0.96; }
+    65% { opacity: 0.88; }
+    100% { transform: translateY(-78px) scale(1.12) translateX(4px); opacity: 0; }
+}
+/* Moderate - corner frames similar to synthetic but only corners */
+.deck-card-option.rarity-moderate {
+    border-color: #2196f3;
+    box-shadow: 0 0 8px rgba(33,150,243,0.45);
+    overflow: visible;
+}
+.deck-card-option.rarity-moderate .corner-frame {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    z-index: 3;
+    border: 2.5px solid transparent;
+    border-radius: 4px;
+    filter: drop-shadow(0 0 4px currentColor);
+    will-change: filter, transform;
+    animation: moderateCornerHue 2.4s infinite linear;
+}
+.deck-card-option.rarity-moderate .corner-tl { top: -3px; left: -3px; border-right: none; border-bottom: none; border-top-color: #00f2ff; border-left-color: #00f2ff; color: #00f2ff; }
+.deck-card-option.rarity-moderate .corner-tr { top: -3px; right: -3px; border-left: none; border-bottom: none; border-top-color: #00f2ff; border-right-color: #00f2ff; color: #00f2ff; }
+.deck-card-option.rarity-moderate .corner-bl { bottom: -3px; left: -3px; border-right: none; border-top: none; border-bottom-color: #00f2ff; border-left-color: #00f2ff; color: #00f2ff; }
+.deck-card-option.rarity-moderate .corner-br { bottom: -3px; right: -3px; border-left: none; border-top: none; border-bottom-color: #00f2ff; border-right-color: #00f2ff; color: #00f2ff; }
+.deck-card-option.rarity-moderate .corner-frame::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+}
+.deck-card-option.rarity-moderate .corner-tl::after { top: -4px; left: -4px; }
+.deck-card-option.rarity-moderate .corner-tr::after { top: -4px; right: -4px; }
+.deck-card-option.rarity-moderate .corner-bl::after { bottom: -4px; left: -4px; }
+.deck-card-option.rarity-moderate .corner-br::after { bottom: -4px; right: -4px; }
+@keyframes moderateCornerHue {
+    0% { filter: hue-rotate(0deg) drop-shadow(0 0 4px #00f2ff); }
+    50% { filter: hue-rotate(180deg) drop-shadow(0 0 6px #00f2ff); }
+    100% { filter: hue-rotate(360deg) drop-shadow(0 0 4px #00f2ff); }
+}
+@keyframes flameFlickerRed {
+    0% { box-shadow: 0 0 10px #e53935, 0 0 20px #ff3d00, 0 0 32px rgba(139,0,0,0.5); }
+    100% { box-shadow: 0 0 16px #ff3d00, 0 0 28px #e53935, 0 0 40px rgba(255,100,0,0.6); }
+}
+@keyframes topFlameRed {
+    0% { transform: scaleY(0.88) translateY(0); opacity: 0.92; }
+    50% { transform: scaleY(1.05) translateY(-0.5px); }
+    100% { transform: scaleY(1.18) translateY(-1px); opacity: 1; }
+}
+@keyframes topFlameRedInner {
+    0% { transform: scaleY(0.90); opacity: 0.88; }
+    100% { transform: scaleY(1.15); opacity: 1; }
+}
+/* side flames \ | and | /  all upwards 30-45° */
+.side-flame {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    width: 14px;
+    pointer-events: none;
+    z-index: 2;
+}
+.side-flame-left {
+    left: -12px;
+    filter: drop-shadow(0 0 5px #ff3d00) drop-shadow(-2px 0 7px rgba(229,57,53,0.85));
+    animation: sideFlameSide 0.34s infinite alternate ease-in-out;
+    transform-origin: right center;
+    will-change: transform, opacity;
+}
+.side-flame-right {
+    right: -12px;
+    filter: drop-shadow(0 0 5px #ff3d00) drop-shadow(2px 0 7px rgba(229,57,53,0.85));
+    animation: sideFlameSide 0.36s infinite alternate ease-in-out reverse;
+    transform-origin: left center;
+    will-change: transform, opacity;
+}
+.deck-card-option.rarity-scarce .side-flame-left {
+    background: linear-gradient(to left, #ffffff 0%, #ffeb3b 18%, #ff6a00 38%, #ff3d00 58%, #e53935 78%, #7f0000 100%);
+    clip-path: polygon(100% 0, 100% 6%, 0 5%, 100% 14%, 100% 18%, 0 17%, 100% 26%, 100% 32%, 0 31%, 100% 40%, 100% 46%, 0 45%, 100% 54%, 100% 60%, 0 59%, 100% 68%, 100% 74%, 0 73%, 100% 82%, 100% 86%, 0 85%, 100% 94%, 100% 100%, 0 100%, 0 0);
+}
+.deck-card-option.rarity-scarce .side-flame-right {
+    background: linear-gradient(to right, #ffffff 0%, #ffeb3b 18%, #ff6a00 38%, #ff3d00 58%, #e53935 78%, #7f0000 100%);
+    clip-path: polygon(0 0, 0 6%, 100% 5%, 0 14%, 0 18%, 100% 17%, 0 26%, 0 32%, 100% 31%, 0 40%, 0 46%, 100% 45%, 0 54%, 0 60%, 100% 59%, 0 68%, 0 74%, 100% 73%, 0 82%, 0 86%, 100% 85%, 0 94%, 0 100%, 100% 100%, 100% 0);
+}
+.deck-card-option.rarity-very_scarce .side-flame-left {
+    background: linear-gradient(to left, #ffffff 0%, #ff80ff 18%, #e040fb 38%, #9c27b0 58%, #7b1fa2 78%, #3a0a5e 100%);
+    clip-path: polygon(100% 0, 100% 6%, 0 5%, 100% 14%, 100% 18%, 0 17%, 100% 26%, 100% 32%, 0 31%, 100% 40%, 100% 46%, 0 45%, 100% 54%, 100% 60%, 0 59%, 100% 68%, 100% 74%, 0 73%, 100% 82%, 100% 86%, 0 85%, 100% 94%, 100% 100%, 0 100%, 0 0);
+    filter: drop-shadow(0 0 5px #e040fb) drop-shadow(-2px 0 7px rgba(170,45,255,0.9));
+}
+.deck-card-option.rarity-very_scarce .side-flame-right {
+    background: linear-gradient(to right, #ffffff 0%, #ff80ff 18%, #e040fb 38%, #9c27b0 58%, #7b1fa2 78%, #3a0a5e 100%);
+    clip-path: polygon(0 0, 0 6%, 100% 5%, 0 14%, 0 18%, 100% 17%, 0 26%, 0 32%, 100% 31%, 0 40%, 0 46%, 100% 45%, 0 54%, 0 60%, 100% 59%, 0 68%, 0 74%, 100% 73%, 0 82%, 0 86%, 100% 85%, 0 94%, 0 100%, 100% 100%, 100% 0);
+    filter: drop-shadow(0 0 5px #e040fb) drop-shadow(2px 0 7px rgba(170,45,255,0.9));
+}
+@keyframes sideFlameSide {
+    0% { transform: scaleX(0.88) skewY(-1.0deg); opacity: 0.92; }
+    100% { transform: scaleX(1.12) skewY(0.8deg); opacity: 1; }
+}
+/* lightning for very_scarce — crackling purple/white */
+.deck-card-option.rarity-very_scarce .lightning {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+    mix-blend-mode: screen;
+}
+.deck-card-option.rarity-very_scarce .lightning::before,
+.deck-card-option.rarity-very_scarce .lightning::after {
+    content: "";
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: #ffffff;
+    box-shadow: 0 0 6px #ffffff, 0 0 12px #c080ff, 0 0 18px #a020ff;
+    opacity: 0.95;
+}
+.deck-card-option.rarity-very_scarce .lightning::before {
+    /* horizontal bolt — sweeps top→bottom */
+    top: 22%;
+    clip-path: polygon(0 40%, 6% 0, 14% 100%, 22% 15%, 30% 85%, 38% 5%, 46% 95%, 54% 10%, 62% 90%, 70% 20%, 78% 75%, 86% 25%, 92% 60%, 100% 40%, 100% 60%, 92% 70%, 78% 85%, 70% 30%, 62% 100%, 54% 20%, 46% 100%, 38% 15%, 30% 95%, 22% 25%, 14% 100%, 6% 15%, 0 60%);
+    animation: lightningSweep 1.9s infinite, lightningFlash 2.6s infinite;
+}
+.deck-card-option.rarity-very_scarce .lightning::after {
+    top: 62%;
+    clip-path: polygon(0 35%, 8% 0, 16% 100%, 24% 12%, 32% 88%, 40% 8%, 48% 92%, 56% 18%, 64% 82%, 72% 12%, 80% 78%, 88% 22%, 94% 60%, 100% 35%, 100% 65%, 94% 70%, 80% 88%, 72% 22%, 64% 92%, 56% 28%, 48% 100%, 40% 18%, 32% 98%, 24% 22%, 16% 100%, 8% 15%, 0 65%);
+    animation: lightningSweep 1.9s infinite 0.35s, lightningFlash 2.6s infinite 0.2s;
+}
+@keyframes lightningSweep {
+    0% { transform: translateY(-14px); opacity: 0; }
+    8% { opacity: 1; }
+    45% { transform: translateY(18px); opacity: 1; }
+    55% { transform: translateY(22px); opacity: 0; }
+    100% { transform: translateY(22px); opacity: 0; }
+}
+@keyframes lightningFlash {
+    0%, 88%, 100% { opacity: 0; }
+    89% { opacity: 0.92; }
+    90% { opacity: 0; }
+    91.5% { opacity: 0.85; }
+    92% { opacity: 0; }
+    93% { opacity: 0.45; }
+}
+
+/* Very scarce - purple top Super Saiyan spikes all upwards */
+.deck-card-option.rarity-very_scarce {
+    border-color: #9c27b0;
+    box-shadow: 0 0 8px rgba(156,39,176,0.45);
+    overflow: visible;
+}
+@keyframes flameFlickerPurple {
+    0% { box-shadow: 0 0 10px #9c27b0, 0 0 20px #e040fb, 0 0 30px rgba(106,27,154,0.6); }
+    100% { box-shadow: 0 0 18px #e040fb, 0 0 30px #9c27b0, 0 0 44px rgba(124,77,255,0.7); }
+}
+@keyframes topFlamePurple {
+    0% { transform: scaleY(0.88) translateY(0); opacity: 0.92; }
+    50% { transform: scaleY(1.05) translateY(-0.5px); }
+    100% { transform: scaleY(1.18) translateY(-1px); opacity: 1; }
+}
+@keyframes topFlamePurpleInner {
+    0% { transform: scaleY(0.90); opacity: 0.88; }
+    100% { transform: scaleY(1.15); opacity: 1; }
+}
+
+/* Trace - royale precious */
+.deck-card-option.rarity-trace {
+    border: 3px solid #ffd700;
+    background: linear-gradient(145deg, #fff8dc 0%, #ffd700 28%, #ffb300 55%, #ff8c00 78%, #fff2a8 100%);
+    color: #3a2500;
+    box-shadow: 0 0 16px rgba(255,215,0,0.9), 0 0 32px rgba(255,179,0,0.55), inset 0 0 10px rgba(255,255,255,0.7);
+    animation: royalePulse 1.9s infinite alternate;
+    overflow: visible;
+}
+.deck-card-option.rarity-trace .opt-id,
+.deck-card-option.rarity-trace .opt-name,
+.deck-card-option.rarity-trace .opt-stats { color: #3a2500 !important; text-shadow: 0 1px 0 rgba(255,255,255,0.7); }
+.deck-card-option.rarity-trace .opt-ownership { color: #7a3d00 !important; }
+.deck-card-option.rarity-trace::before {
+    content: "👑";
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 0 6px #ffd700);
+    animation: crownFloat 1.6s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+.deck-card-option.rarity-trace::after {
+    content: "✦ ✦ ✦";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.55rem;
+    letter-spacing: 3px;
+    color: #ffd700;
+    text-shadow: 0 0 6px #fff, 0 0 10px #ffb300;
+    animation: sparkleTwinkle 0.9s infinite alternate;
+    pointer-events: none;
+}
+@keyframes royalePulse {
+    0% { box-shadow: 0 0 14px rgba(255,215,0,0.75), 0 0 28px rgba(255,179,0,0.45); transform: translateY(0); }
+    100% { box-shadow: 0 0 22px rgba(255,215,0,1), 0 0 40px rgba(255,165,0,0.65); transform: translateY(-2px); }
+}
+@keyframes crownFloat {
+    0% { transform: translateX(-50%) translateY(0) rotate(-2deg); }
+    100% { transform: translateX(-50%) translateY(-3px) rotate(2deg); }
+}
+@keyframes sparkleTwinkle {
+    0% { opacity: 0.65; transform: translateX(-50%) scale(0.9); }
+    100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
 /* --- CANVAS SCROLL HUD CONTROLS --- */
 
 .lobby-scroll-controls {
